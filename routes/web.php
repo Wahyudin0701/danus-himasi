@@ -1,8 +1,14 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Livewire\Actions\Logout;
 
 Route::view('/', 'welcome');
+
+Route::post('logout', function (Logout $logout) {
+    $logout();
+    return redirect()->route('login');
+})->middleware('auth')->name('logout');
 
 Route::get('dashboard', \App\Livewire\Dashboard::class)
     ->middleware(['auth', 'verified'])

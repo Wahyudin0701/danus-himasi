@@ -1,25 +1,24 @@
-<div class="min-h-screen flex flex-col justify-center items-center pt-6 sm:pt-0 bg-gray-50">
-    <div class="w-full sm:max-w-md mt-6 px-10 py-12 bg-white shadow-xl shadow-gray-200/50 overflow-hidden sm:rounded-3xl border border-gray-100 text-center">
-        
-        <div class="mx-auto w-20 h-20 bg-yellow-50 rounded-full flex items-center justify-center mb-6">
-            <svg class="w-10 h-10 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
-        </div>
-        
-        <h2 class="text-2xl font-black text-gray-900 mb-2">Akses Dibatasi</h2>
-        
-        <p class="text-sm text-gray-500 font-medium mb-6">
-            Maaf, akun Anda terdaftar pada periode <span class="font-bold text-gray-900"><?php echo e($userPeriode ? $userPeriode->name : 'Tidak Diketahui'); ?></span>. Saat ini, sistem sedang aktif pada periode kepengurusan <span class="font-bold text-blue-600"><?php echo e($activePeriode ? $activePeriode->name : 'Belum Ada'); ?></span>.
-        </p>
+<div class="text-center">
+    <div class="mx-auto w-20 h-20 bg-yellow-50 rounded-full flex items-center justify-center mb-6">
+        <svg class="w-10 h-10 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+    </div>
+    
+    <h2 class="text-2xl font-black text-gray-900 mb-2">Akses Dibatasi</h2>
+    
+    <p class="text-sm text-gray-500 font-medium mb-6">
+        Maaf, akun Anda terdaftar pada periode <span class="font-bold text-gray-900"><?php echo e($userPeriode ? $userPeriode->name : 'Tidak Diketahui'); ?></span>. Saat ini, sistem sedang aktif pada periode kepengurusan <span class="font-bold text-blue-600"><?php echo e($activePeriode ? $activePeriode->name : 'Belum Ada'); ?></span>.
+    </p>
 
-        <div class="bg-blue-50 border border-blue-100 rounded-xl p-4 mb-8 text-left text-sm text-blue-800 font-medium">
-            <p>Sistem ini dirancang untuk memisahkan data setiap periode secara independen.</p>
-            <p class="mt-2">Jika Anda merupakan pengurus di periode aktif saat ini, mohon hubungi Administrator untuk mendaftarkan akun baru Anda di periode ini.</p>
-        </div>
+    <div class="bg-blue-50 border border-blue-100 rounded-xl p-4 mb-8 text-left text-sm text-blue-800 font-medium leading-relaxed">
+        <p>Sistem ini dirancang untuk memisahkan data setiap periode secara independen.</p>
+        <p class="mt-2">Jika Anda merupakan pengurus di periode aktif saat ini, mohon hubungi Administrator untuk mendaftarkan akun baru Anda di periode ini.</p>
+    </div>
 
-        <button wire:click="logout" class="w-full inline-flex justify-center items-center px-4 py-3 bg-blue-600 border border-transparent rounded-xl font-bold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition ease-in-out duration-150 shadow-md shadow-blue-200">
+    <form method="POST" action="<?php echo e(route('logout')); ?>">
+        <?php echo csrf_field(); ?>
+        <button type="submit" class="w-full inline-flex justify-center items-center px-4 py-3.5 bg-blue-600 border border-transparent rounded-xl font-bold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition ease-in-out duration-150 shadow-md shadow-blue-200">
             Kembali ke Halaman Login
         </button>
-
-    </div>
+    </form>
 </div>
 <?php /**PATH C:\laragon\www\Danus-Himasi\resources\views/livewire/inactive-periode.blade.php ENDPATH**/ ?>

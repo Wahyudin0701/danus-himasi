@@ -14,7 +14,10 @@
         <p class="mt-2">Jika Anda merupakan pengurus di periode aktif saat ini, mohon hubungi Administrator untuk mendaftarkan akun baru Anda di periode ini.</p>
     </div>
 
-    <button wire:click="logout" class="w-full inline-flex justify-center items-center px-4 py-3.5 bg-blue-600 border border-transparent rounded-xl font-bold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition ease-in-out duration-150 shadow-md shadow-blue-200">
-        Kembali ke Halaman Login
-    </button>
+    <form method="POST" action="{{ route('logout') }}">
+        @csrf
+        <button type="submit" class="w-full inline-flex justify-center items-center px-4 py-3.5 bg-blue-600 border border-transparent rounded-xl font-bold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition ease-in-out duration-150 shadow-md shadow-blue-200">
+            Kembali ke Halaman Login
+        </button>
+    </form>
 </div>

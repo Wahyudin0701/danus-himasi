@@ -14,7 +14,7 @@ class InactivePeriode extends Component
     public function logout(Logout $logout)
     {
         $logout();
-        $this->redirect('/', navigate: true);
+        $this->redirectRoute('login');
     }
 
     public function render()
