@@ -13,7 +13,12 @@ use Illuminate\Support\Facades\Auth;
     </div>
 
     {{-- Main Navigation --}}
-    <nav class="flex-1 overflow-y-auto p-4 space-y-1">
+        <style>
+        #sidebar-nav::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+    <nav id="sidebar-nav" class="flex-1 overflow-y-auto p-4 space-y-1" style="scrollbar-width: none; -ms-overflow-style: none;">
         @if(auth()->user()->role === 'admin')
             <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-2 mb-3">SISTEM (ADMIN)</p>
             
