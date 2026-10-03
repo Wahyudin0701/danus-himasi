@@ -109,8 +109,10 @@ class Index extends Component
             ->orderBy('created_at', 'asc')
             ->get();
 
+        $users = \App\Models\User::get(['id', 'name']);
         return view('livewire.chat.index', [
             'messages' => $messages,
+            'users' => $users
         ])->layout('layouts.app');
     }
 }

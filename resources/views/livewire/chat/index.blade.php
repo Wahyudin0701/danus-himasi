@@ -68,7 +68,15 @@
                                                             Pesan ini telah dihapus
                                                         </span>
                                                     @else
-                                                        {{ $message->replyTo->body }}
+                                                        @php
+                                                        $rbody = e($message->replyTo->body);
+                                                        foreach($users as $u) {
+                                                            if (str_contains($rbody, '@' . $u->name)) {
+                                                                $rbody = str_replace('@' . $u->name, '<span class="font-bold">@' . $u->name . '</span>', $rbody);
+                                                            }
+                                                        }
+                                                    @endphp
+                                                    {!! $rbody !!}
                                                     @endif
                                                 </span>
                                             </div>
@@ -80,7 +88,16 @@
                                                 Pesan ini telah dihapus
                                             </span>
                                         @else
-                                            {{ $message->body }}
+                                            @php
+                                            $body = e($message->body);
+                                            $color = $isMe ? 'text-blue-100' : 'text-blue-600';
+                                            foreach($users as $u) {
+                                                if (str_contains($body, '@' . $u->name)) {
+                                                    $body = str_replace('@' . $u->name, '<span class="font-bold cursor-pointer hover:underline ' . $color . '">@' . $u->name . '</span>', $body);
+                                                }
+                                            }
+                                        @endphp
+                                        {!! $body !!}
                                         @endif
                                     </div>
                                     
@@ -155,13 +172,33 @@
                 </button>
             </div>
         @endif
-        <form wire:submit="sendMessage" class="flex items-end gap-3 max-w-5xl mx-auto">
-            <div class="flex-1 bg-gray-50 border border-gray-200 rounded-2xl overflow-hidden focus-within:ring-2 focus-within:ring-blue-100 focus-within:border-blue-400 transition-all">
+        <form wire:submit="sendMessage" class="flex items-end gap-3 max-w-5xl mx-auto" 
+              x-data="mentionHandler()" 
+              @click.outside="showMentions = false">
+            
+            <div class="flex-1 bg-gray-50 border border-gray-200 rounded-2xl focus-within:ring-2 focus-within:ring-blue-100 focus-within:border-blue-400 transition-all relative">
+                
+                {{-- Mention Dropdown --}}
+                <div x-show="showMentions && filteredUsers.length > 0" x-cloak 
+                     class="absolute bottom-full left-0 mb-2 w-64 max-h-48 overflow-y-auto bg-white border border-gray-200 rounded-xl shadow-lg z-50 py-1">
+                    <template x-for="user in filteredUsers" :key="user.id">
+                        <button type="button" @click.prevent="selectUser(user.name)" class="w-full text-left px-4 py-2 text-sm font-bold text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-colors flex items-center gap-2">
+                            <div class="w-6 h-6 rounded-full bg-blue-100 flex items-center justify-center text-[10px] text-blue-600 border border-blue-200" x-text="user.name.substring(0,1)"></div>
+                            <span x-text="user.name"></span>
+                        </button>
+                    </template>
+                </div>
+
                 <textarea 
+                    x-ref="chatInput"
                     wire:model="messageInput" 
+                    x-model="text"
+                    @input="checkMention"
+                    @keydown.up.prevent="/* navigation logic could go here */"
+                    @keydown.down.prevent="/* navigation logic could go here */"
                     rows="1" 
-                    placeholder="Ketik pesan ke grup..." 
-                    class="w-full bg-transparent border-0 px-4 py-3 text-sm font-medium focus:ring-0 resize-none max-h-32"
+                    placeholder="Ketik pesan ke grup... (Ketik @ untuk tag)" 
+                    class="w-full bg-transparent border-0 px-4 py-3 text-sm font-medium focus:ring-0 resize-none max-h-32 rounded-2xl"
                     oninput="this.style.height = ''; this.style.height = Math.min(this.scrollHeight, 120) + 'px'"
                     wire:keydown.enter.prevent="sendMessage"
                 ></textarea>
@@ -175,6 +212,49 @@
 
     {{-- Scroll to bottom script --}}
     <script>
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('mentionHandler', () => ({
+                text: @entangle('messageInput'),
+                allUsers: @json(\App\Models\User::orderBy('name')->get(['id', 'name'])),
+                showMentions: false,
+                mentionQuery: '',
+                cursorPos: 0,
+                mentionStart: 0,
+                
+                checkMention(e) {
+                    this.cursorPos = e.target.selectionStart;
+                    const textBeforeCursor = this.text.substring(0, this.cursorPos);
+                    
+                    // Match @ followed by word characters or spaces, up to the cursor
+                    // Only match if @ is at the start of string or preceded by a space
+                    const match = textBeforeCursor.match(/(?:^|\s)@([a-zA-Z0-9.\s]{0,20})$/);
+                    
+                    if (match !== null) {
+                        this.mentionQuery = match[1].toLowerCase();
+                        this.mentionStart = this.cursorPos - match[1].length - 1; 
+                        this.showMentions = true;
+                    } else {
+                        this.showMentions = false;
+                    }
+                },
+                
+                get filteredUsers() {
+                    if (this.mentionQuery.trim() === '') return this.allUsers;
+                    return this.allUsers.filter(u => u.name.toLowerCase().includes(this.mentionQuery));
+                },
+                
+                selectUser(name) {
+                    const before = this.text.substring(0, this.mentionStart);
+                    const after = this.text.substring(this.cursorPos);
+                    // Insert the name and add a trailing space
+                    this.text = before + '@' + name + ' ' + after;
+                    this.showMentions = false;
+                    this.$refs.chatInput.focus();
+                }
+            }));
+        });
+
+        document.addEventListener('livewire:initialized', () => {
         document.addEventListener('livewire:initialized', () => {
             const scrollToBottom = () => {
                 const container = document.getElementById('chat-messages');
