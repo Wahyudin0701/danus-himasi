@@ -25,9 +25,11 @@ new class extends Component
             @php
                 $routeName = request()->route()?->getName() ?? '';
                 if (str_starts_with($routeName, 'members.')) {
-                    echo 'Kelola Tim';
+                    echo 'Tim Divisi';
                 } elseif (str_starts_with($routeName, 'bidang.')) {
                     echo 'Kelola Bidang';
+                } elseif (str_starts_with($routeName, 'kas.')) {
+                    echo 'Kas Danus';
                 } elseif ($routeName === 'dashboard') {
                     $role = auth()->user()->role;
                     if ($role === 'kadiv') {
@@ -46,13 +48,7 @@ new class extends Component
                 } elseif (str_starts_with($routeName, 'projects.')) {
                     echo 'Program Kerja';
                 } else {
-                    if (auth()->user()->role === 'admin') {
-                        echo 'Panel Administrator Sistem';
-                    } elseif (in_array(auth()->user()->role, ['kadiv', 'wakadiv'])) {
-                        echo 'Dashboard Pimpinan Divisi';
-                    } else {
-                        echo 'Dashboard ' . ucwords(auth()->user()->role);
-                    }
+                    echo 'Aplikasi Danus';
                 }
             @endphp
         </h1>
