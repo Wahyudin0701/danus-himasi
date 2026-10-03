@@ -56,11 +56,21 @@
                                     
                                     {{-- The Bubble Content --}}
                                     <div class="px-4 py-2.5 rounded-2xl text-sm font-medium shadow-sm {{ $isMe ? 'bg-blue-600 text-white rounded-tr-sm' : 'bg-white border border-gray-100 text-gray-800 rounded-tl-sm' }}" style="word-break: break-word;">
+                                        @if($message->replyTo)
+                                            <div class="mb-1 p-2 bg-black/5 rounded border-l-4 {{ $isMe ? 'border-blue-300' : 'border-gray-300' }} text-xs opacity-80" style="word-break: break-word;">
+                                                <span class="font-bold {{ $isMe ? 'text-blue-100' : 'text-gray-700' }} block mb-0.5">
+                                                    {{ $message->replyTo->sender_id === auth()->id() ? 'Anda' : ($message->replyTo->sender->name ?? 'User') }}
+                                                </span>
+                                                <span class="{{ $isMe ? 'text-blue-50' : 'text-gray-600' }} line-clamp-2">
+                                                    {{ $message->replyTo->body }}
+                                                </span>
+                                            </div>
+                                        @endif
                                         {{ $message->body }}
                                     </div>
                                     
-                                    {{-- Actions Menu (3 dots) - Only for own messages within 15 mins --}}
-                                    @if($canModify && !$isEditing)
+                                    {{-- Actions Menu (3 dots) --}}
+                                    @if(!$isEditing)
                                         <div class="relative opacity-0 group-hover:opacity-100 transition-opacity" @click.outside="menuOpen = false">
                                             <button @click="menuOpen = !menuOpen" class="p-1 text-gray-400 hover:bg-gray-200 hover:text-gray-700 rounded-full transition-colors">
                                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"/></svg>
@@ -69,14 +79,20 @@
                                             {{-- Dropdown --}}
                                             <div x-show="menuOpen" x-cloak 
                                                  class="absolute {{ $isMe ? 'right-0 mr-6' : 'left-0 ml-6' }} top-0 w-32 bg-white rounded-xl shadow-lg border border-gray-100 py-1 z-20">
-                                                <button @click="menuOpen = false; $wire.startEdit({{ $message->id }})" class="w-full text-left px-4 py-2 text-xs font-bold text-gray-700 hover:bg-gray-50 flex items-center gap-2">
-                                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
-                                                    Edit
+                                                <button @click="menuOpen = false; $wire.startReply({{ $message->id }})" class="w-full text-left px-4 py-2 text-xs font-bold text-gray-700 hover:bg-gray-50 flex items-center gap-2">
+                                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"/></svg>
+                                                    Balas
                                                 </button>
-                                                <button @click="menuOpen = false" wire:click="deleteMessage({{ $message->id }})" wire:confirm="Hapus pesan ini?" class="w-full text-left px-4 py-2 text-xs font-bold text-red-600 hover:bg-red-50 flex items-center gap-2">
-                                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                                                    Hapus
-                                                </button>
+                                                @if($canModify)
+                                                    <button @click="menuOpen = false; $wire.startEdit({{ $message->id }})" class="w-full text-left px-4 py-2 text-xs font-bold text-gray-700 hover:bg-gray-50 flex items-center gap-2">
+                                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+                                                        Edit
+                                                    </button>
+                                                    <button @click="menuOpen = false" wire:click="deleteMessage({{ $message->id }})" wire:confirm="Hapus pesan ini?" class="w-full text-left px-4 py-2 text-xs font-bold text-red-600 hover:bg-red-50 flex items-center gap-2 border-t border-gray-100 mt-1 pt-1">
+                                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                                        Hapus
+                                                    </button>
+                                                @endif
                                             </div>
                                         </div>
                                     @endif
@@ -106,7 +122,18 @@
 
     {{-- Input Area (hide when editing a message) --}}
     @if(!$editingMessageId)
-    <div class="p-4 border-t border-gray-100 bg-white flex-shrink-0">
+    <div class="p-4 border-t border-gray-100 bg-white flex-shrink-0 relative">
+        @if($replyingToMessageId && $this->replyingToMessage)
+            <div class="max-w-5xl mx-auto mb-2 relative bg-gray-50 border-l-4 border-blue-500 rounded-lg p-3 pr-10 shadow-sm flex items-start gap-3">
+                <div class="flex-1 min-w-0">
+                    <p class="text-xs font-bold text-blue-600 mb-0.5">Membalas {{ $this->replyingToMessage->sender_id === auth()->id() ? 'Anda' : ($this->replyingToMessage->sender->name ?? 'User') }}</p>
+                    <p class="text-xs text-gray-500 truncate">{{ $this->replyingToMessage->body }}</p>
+                </div>
+                <button wire:click="cancelReply" class="absolute right-2 top-2 p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-200 rounded-full transition-colors">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+        @endif
         <form wire:submit="sendMessage" class="flex items-end gap-3 max-w-5xl mx-auto">
             <div class="flex-1 bg-gray-50 border border-gray-200 rounded-2xl overflow-hidden focus-within:ring-2 focus-within:ring-blue-100 focus-within:border-blue-400 transition-all">
                 <textarea 

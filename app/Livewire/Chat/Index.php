@@ -13,6 +13,7 @@ class Index extends Component
     public int $pollInterval = 3000; // 3 seconds
     
     // Edit state
+    public ?int $replyingToMessageId = null;
     public ?int $editingMessageId = null;
     public string $editMessageInput = '';
 
@@ -25,10 +26,28 @@ class Index extends Component
         Message::create([
             'sender_id'   => Auth::id(),
             'receiver_id' => null, // null means group chat
+            'reply_to_id' => $this->replyingToMessageId,
             'body'        => $this->messageInput,
         ]);
 
         $this->messageInput = '';
+        $this->replyingToMessageId = null;
+    }
+
+        public function getReplyingToMessageProperty()
+    {
+        return $this->replyingToMessageId ? Message::with(['sender', 'replyTo.sender'])->find($this->replyingToMessageId) : null;
+    }
+
+    public function startReply(int $messageId)
+    {
+        $this->replyingToMessageId = $messageId;
+        $this->cancelEdit(); // Cannot edit and reply at the same time
+    }
+
+    public function cancelReply()
+    {
+        $this->replyingToMessageId = null;
     }
 
     public function startEdit(int $messageId)
@@ -85,7 +104,7 @@ class Index extends Component
     public function render()
     {
         // Get all group messages
-        $messages = Message::with('sender')
+        $messages = Message::with(['sender', 'replyTo.sender'])
             ->whereNull('receiver_id')
             ->orderBy('created_at', 'asc')
             ->get();
