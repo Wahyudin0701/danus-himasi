@@ -11,8 +11,15 @@
         </div>
     </div>
 
+    <style>
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        #chat-messages::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+    
     {{-- Messages Area --}}
-    <div class="flex-1 overflow-y-auto p-6 bg-gray-50/50" id="chat-messages" wire:poll.{{ $pollInterval }}ms>
+    <div class="flex-1 overflow-y-auto p-6 bg-gray-50/50" id="chat-messages" wire:poll.{{ $pollInterval }}ms style="scrollbar-width: none; -ms-overflow-style: none;">
         <div class="space-y-6">
             @forelse($messages as $message)
                 @php
