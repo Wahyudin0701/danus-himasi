@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
         <img src="{{ asset('Logo_Himasi_Store.jpg') }}" alt="Logo Himasi" class="w-11 h-11 rounded-full object-cover flex-shrink-0 shadow-md border border-gray-100">
         <div class="leading-tight">
             <h2 class="text-sm font-black text-gray-900 tracking-tight">DANUS HIMASI</h2>
-            <p class="text-[10px] font-bold text-orange-600 tracking-wider">INJA</p>
+            <p class="text-[10px] font-bold text-orange-600 tracking-wider">UNIVERSITAS JAMBI</p>
         </div>
     </div>
 
