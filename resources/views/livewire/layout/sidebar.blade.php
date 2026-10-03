@@ -19,15 +19,7 @@ use Illuminate\Support\Facades\Auth;
         }
     </style>
     <nav id="sidebar-nav" class="flex-1 overflow-y-auto p-4 space-y-1" style="scrollbar-width: none; -ms-overflow-style: none;">
-        @if(auth()->user()->role === 'admin')
-            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-2 mb-3">SISTEM (ADMIN)</p>
-            
-            <a href="{{ route('bidang.index') }}" wire:navigate class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all {{ request()->routeIs('bidang.*') ? 'bg-blue-600 text-white shadow-md shadow-blue-200' : 'text-gray-500 hover:bg-gray-50 hover:text-blue-600' }}">
-                <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/></svg>
-                Kelola Bidang
-            </a>
 
-            <div class="pt-6">
                 <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-2 mb-3">MENU DIVISI DANA DAN USAHA</p>
                 
                 <a href="{{ route('dashboard') }}" wire:navigate class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all {{ request()->routeIs('dashboard') ? 'bg-blue-600 text-white shadow-md shadow-blue-200' : 'text-gray-500 hover:bg-gray-50 hover:text-blue-600' }}">
@@ -111,7 +103,6 @@ use Illuminate\Support\Facades\Auth;
                     Chat Internal
                 </a>
             </div>
-        @endif
 
         <div class="pt-6">
             <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-2 mb-3">PENGATURAN</p>
