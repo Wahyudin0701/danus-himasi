@@ -24,6 +24,7 @@ class Index extends Component
                 'url' => route('projects.show', $project->id),
                 'backgroundColor' => $this->getColorForStatus($project->status),
                 'borderColor' => 'transparent',
+                'allDay' => true,
             ];
         });
 

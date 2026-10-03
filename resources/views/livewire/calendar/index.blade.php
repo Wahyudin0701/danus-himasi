@@ -40,6 +40,7 @@
                     list: 'Agenda'
                 },
                 events: @json($events),
+                displayEventTime: false,
                 eventClick: function(info) {
                     if (info.event.url) {
                         info.jsEvent.preventDefault();
