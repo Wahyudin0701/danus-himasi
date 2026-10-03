@@ -4,11 +4,14 @@ namespace App\Livewire\Forms;
 
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Livewire\Attributes\Validate;
 use Livewire\Form;
+use App\Models\User;
+use App\Models\Periode;
 
 class LoginForm extends Form
 {
@@ -25,7 +28,26 @@ class LoginForm extends Form
     {
         $this->ensureIsNotRateLimited();
 
-        if (! Auth::attempt($this->only(['nim', 'password']), $this->remember)) {
+        // Find candidate users with this NIM.
+        // Prioritize the user from the ACTIVE periode so that someone who
+        // is a member in both an old and a new periode always logs into
+        // the new (active) one first.
+        $activePeriodeId = optional(Periode::active())->id;
+
+        $candidates = User::where('nim', $this->nim)
+            ->orderByRaw("CASE WHEN periode_id = ? THEN 0 ELSE 1 END", [$activePeriodeId])
+            ->orderBy('id')
+            ->get();
+
+        $authenticatedUser = null;
+        foreach ($candidates as $candidate) {
+            if (Hash::check($this->password, $candidate->password)) {
+                $authenticatedUser = $candidate;
+                break;
+            }
+        }
+
+        if (!$authenticatedUser) {
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
@@ -33,14 +55,14 @@ class LoginForm extends Form
             ]);
         }
 
+        // Manually log in the correct user record
+        Auth::login($authenticatedUser, $this->remember);
         RateLimiter::clear($this->throttleKey());
 
-        $user = Auth::user();
-
         \App\Models\ActivityLog::create([
-            'user_id'     => $user->id,
+            'user_id'     => $authenticatedUser->id,
             'action'      => 'LOGIN',
-            'description' => $user->name . ' berhasil masuk (login) ke sistem.',
+            'description' => $authenticatedUser->name . ' berhasil masuk (login) ke sistem.',
             'ip_address'  => request()->ip()
         ]);
     }
