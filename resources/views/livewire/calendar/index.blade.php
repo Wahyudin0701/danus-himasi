@@ -31,12 +31,12 @@
                 headerToolbar: {
                     left: 'prev,next today',
                     center: 'title',
-                    right: 'dayGridMonth,timeGridWeek,listMonth'
+                    right: 'dayGridMonth,listMonth'
                 },
                 buttonText: {
                     today: 'Hari Ini',
                     month: 'Bulan',
-                    week: 'Minggu',
+                    
                     list: 'Agenda'
                 },
                 events: @json($events),
