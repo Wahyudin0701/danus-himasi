@@ -84,7 +84,7 @@
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">
-                    @forelse($members as $member)
+                    @forelse($penguruses as $member)
                     <tr @click="m = JSON.parse($el.dataset.member); showModal = true" data-member="{{ json_encode($member) }}" class="hover:bg-gray-50/50 transition-colors cursor-pointer group">
                         <td class="px-6 py-5">
                             <div class="flex items-center gap-3">
