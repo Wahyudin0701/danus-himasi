@@ -29,7 +29,18 @@ new class extends Component
                 } elseif (str_starts_with($routeName, 'bidang.')) {
                     echo 'Kelola Bidang';
                 } elseif ($routeName === 'dashboard') {
-                    echo 'Dashboard';
+                    $role = auth()->user()->role;
+                    if ($role === 'kadiv') {
+                        echo 'Dashboard Kepala Divisi';
+                    } elseif ($role === 'wakadiv') {
+                        echo 'Dashboard Wakil Kadiv';
+                    } elseif ($role === 'sekretaris') {
+                        echo 'Dashboard Sekretaris';
+                    } elseif ($role === 'bendahara') {
+                        echo 'Dashboard Bendahara';
+                    } else {
+                        echo 'Dashboard';
+                    }
                 } elseif ($routeName === 'profile') {
                     echo 'Profil Saya';
                 } elseif (str_starts_with($routeName, 'projects.')) {
