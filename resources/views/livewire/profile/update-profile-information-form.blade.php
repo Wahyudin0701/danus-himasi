@@ -89,14 +89,14 @@ new class extends Component
 
         
 
-        <div class="flex items-center gap-4 pt-2">
-            <button type="submit" class="inline-flex items-center px-5 py-2.5 bg-blue-600 text-white text-sm font-bold rounded-xl hover:bg-blue-700 transition-colors shadow-md shadow-blue-200">
-                Simpan Perubahan
-            </button>
-
+        <div class="flex items-center justify-end gap-4 pt-4">
             <x-action-message class="me-3 text-sm font-bold text-green-600" on="profile-updated">
                 Data berhasil disimpan!
             </x-action-message>
+
+            <button type="submit" class="inline-flex items-center px-6 py-2.5 bg-blue-600 text-white text-sm font-bold rounded-xl hover:bg-blue-700 transition-colors shadow-md shadow-blue-200">
+                Simpan Perubahan
+            </button>
         </div>
     </form>
 </section>

@@ -1,5 +1,5 @@
 <x-app-layout>
-    <div class="max-w-[1400px] mx-auto w-full">
+    <div class="max-w-4xl mx-auto w-full">
         {{-- Page Header --}}
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
             <div>
@@ -11,14 +11,14 @@
         <div class="space-y-6">
             {{-- Update Profile Info Form --}}
             <div class="p-6 md:p-8 bg-white rounded-3xl shadow-sm border border-gray-100">
-                <div class="max-w-2xl">
+                <div class="max-w-full">
                     <livewire:profile.update-profile-information-form />
                 </div>
             </div>
 
             {{-- Update Password Form --}}
             <div class="p-6 md:p-8 bg-white rounded-3xl shadow-sm border border-gray-100">
-                <div class="max-w-2xl">
+                <div class="max-w-full">
                     <livewire:profile.update-password-form />
                 </div>
             </div>
