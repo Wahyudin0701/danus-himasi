@@ -28,7 +28,6 @@ new class extends Component
 
         $validated = $this->validate([
             'name' => ['required', 'string', 'max:255'],
-            'angkatan' => ['nullable', 'string', 'max:10'],
         ]);
 
         $user->fill($validated);
@@ -56,11 +55,17 @@ new class extends Component
 
     <form wire:submit="updateProfileInformation" class="mt-6 space-y-5">
         
-        {{-- NIM (Readonly) --}}
-        <div>
-            <label class="block text-xs font-bold text-gray-500 mb-1">Nomor Induk Mahasiswa (NIM)</label>
-            <input type="text" value="{{ auth()->user()->nim }}" disabled class="w-full px-4 py-2.5 bg-gray-100 border border-gray-200 text-gray-500 text-sm font-medium rounded-xl cursor-not-allowed">
-            <p class="mt-1.5 text-xs text-gray-400 font-medium">NIM digunakan untuk login dan tidak dapat diubah.</p>
+        {{-- NIM & Angkatan (Readonly) --}}
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div>
+                <label class="block text-xs font-bold text-gray-500 mb-1">Nomor Induk Mahasiswa (NIM)</label>
+                <input type="text" value="{{ auth()->user()->nim }}" disabled class="w-full px-4 py-2.5 bg-gray-100 border border-gray-200 text-gray-500 text-sm font-medium rounded-xl cursor-not-allowed">
+                <p class="mt-1.5 text-xs text-gray-400 font-medium">NIM untuk login, tidak dapat diubah.</p>
+            </div>
+            <div>
+                <label class="block text-xs font-bold text-gray-500 mb-1">Tahun Angkatan</label>
+                <input type="text" value="{{ auth()->user()->angkatan ?? '-' }}" disabled class="w-full px-4 py-2.5 bg-gray-100 border border-gray-200 text-gray-500 text-sm font-medium rounded-xl cursor-not-allowed">
+            </div>
         </div>
 
         {{-- Role & Bidang (Readonly) --}}
@@ -82,11 +87,7 @@ new class extends Component
             <x-input-error class="mt-2" :messages="$errors->get('name')" />
         </div>
 
-        <div>
-            <label for="angkatan" class="block text-xs font-bold text-gray-700 mb-1">Tahun Angkatan</label>
-            <input wire:model="angkatan" id="angkatan" type="text" placeholder="Contoh: 2022" class="w-full md:w-1/2 px-4 py-2.5 bg-white border border-gray-300 text-sm font-medium rounded-xl focus:ring-blue-500 focus:border-blue-500 transition-colors shadow-sm">
-            <x-input-error class="mt-2" :messages="$errors->get('angkatan')" />
-        </div>
+        
 
         <div class="flex items-center gap-4 pt-2">
             <button type="submit" class="inline-flex items-center px-5 py-2.5 bg-blue-600 text-white text-sm font-bold rounded-xl hover:bg-blue-700 transition-colors shadow-md shadow-blue-200">
