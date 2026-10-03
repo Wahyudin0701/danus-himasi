@@ -10,14 +10,17 @@ class Dashboard extends Component
 {
     public function render()
     {
-        $totalAnggota = User::where('role', 'anggota')->count();
-        $totalProker  = Project::count();
+        $totalAnggota = User::where('role', '!=', 'admin')->count();
+                $totalProker  = Project::count();
+        $totalModal = Project::sum('modal');
+        $totalPendapatan = Project::sum('pendapatan');
+        $totalKeuntungan = $totalPendapatan - $totalModal;
         $prokerAktif  = Project::where('status', 'active')->count();
         $recentProjects = Project::with('members.user')->latest()->take(8)->get();
         $anggota = User::whereIn('role', ['anggota', 'sekretaris', 'bendahara'])->get();
 
         return view('livewire.dashboard', compact(
-            'totalAnggota', 'totalProker', 'prokerAktif', 'recentProjects', 'anggota'
+            'totalAnggota', 'totalProker', 'prokerAktif', 'recentProjects', 'anggota', 'totalModal', 'totalPendapatan', 'totalKeuntungan'
         ))->layout('layouts.app');
     }
 }

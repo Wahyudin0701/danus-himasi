@@ -39,13 +39,13 @@
         </div>
 
         {{-- Stats Cards --}}
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-            {{-- Card 1 --}}
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-6 mb-8">
+            {{-- Card Anggota --}}
             <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
                 <div class="flex justify-between items-start">
                     <div>
-                        <p class="text-4xl font-black text-gray-900 mb-1 mt-2">{{ $totalAnggota }}</p>
-                        <p class="text-[11px] font-bold text-gray-500 uppercase tracking-wider">Total Anggota</p>
+                        <p class="text-3xl font-black text-gray-900 mb-1 mt-2">{{ $totalAnggota }}</p>
+                        <p class="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Total Anggota</p>
                     </div>
                     <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center flex-shrink-0">
                         <svg class="w-5 h-5 text-blue-500" fill="currentColor" viewBox="0 0 20 20"><path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"/></svg>
@@ -53,12 +53,12 @@
                 </div>
             </div>
 
-            {{-- Card 2 --}}
+            {{-- Card Proker --}}
             <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
                 <div class="flex justify-between items-start">
                     <div>
-                        <p class="text-4xl font-black text-gray-900 mb-1 mt-2">{{ $totalProker }}</p>
-                        <p class="text-[11px] font-bold text-gray-500 uppercase tracking-wider">Total Proker</p>
+                        <p class="text-3xl font-black text-gray-900 mb-1 mt-2">{{ $totalProker }}</p>
+                        <p class="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Total Proker</p>
                     </div>
                     <div class="w-10 h-10 rounded-xl bg-purple-50 flex items-center justify-center flex-shrink-0">
                         <svg class="w-5 h-5 text-purple-500" fill="currentColor" viewBox="0 0 20 20">
@@ -69,15 +69,47 @@
                 </div>
             </div>
 
-            {{-- Card 3 (Total Anggaran) --}}
+            {{-- Card Modal Keseluruhan --}}
             <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
                 <div class="flex justify-between items-start">
                     <div>
-                        <p class="text-4xl font-black text-gray-900 mb-1 mt-2">Rp0</p>
-                        <p class="text-[11px] font-bold text-gray-500 uppercase tracking-wider">Total Anggaran</p>
+                        <p class="text-2xl font-black text-gray-900 mb-1 mt-3">Rp{{ number_format($totalModal, 0, ',', '.') }}</p>
+                        <p class="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Total Modal</p>
                     </div>
                     <div class="w-10 h-10 rounded-xl bg-orange-50 flex items-center justify-center flex-shrink-0">
-                        <svg class="w-5 h-5 text-orange-500" fill="currentColor" viewBox="0 0 20 20"><path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z" /><path fill-rule="evenodd" d="M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z" clip-rule="evenodd" /></svg>
+                        <svg class="w-5 h-5 text-orange-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 4a2 2 0 00-2 2v4h3.293l3.3-3.3a1 1 0 011.414 0l3.3 3.3H20V6a2 2 0 00-2-2H4zm16 6h-6.293l-3.3 3.3a1 1 0 01-1.414 0l-3.3-3.3H2v4a2 2 0 002 2h16a2 2 0 002-2v-4z" clip-rule="evenodd" /></svg>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Card Pendapatan Keseluruhan --}}
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-2xl font-black text-gray-900 mb-1 mt-3">Rp{{ number_format($totalPendapatan, 0, ',', '.') }}</p>
+                        <p class="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Total Pendapatan</p>
+                    </div>
+                    <div class="w-10 h-10 rounded-xl bg-green-50 flex items-center justify-center flex-shrink-0">
+                        <svg class="w-5 h-5 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z" /><path fill-rule="evenodd" d="M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z" clip-rule="evenodd" /></svg>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Card Keuntungan --}}
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-2xl font-black {{ $totalKeuntungan >= 0 ? 'text-emerald-600' : 'text-red-600' }} mb-1 mt-3">
+                            {{ $totalKeuntungan < 0 ? '-' : '' }}Rp{{ number_format(abs($totalKeuntungan), 0, ',', '.') }}
+                        </p>
+                        <p class="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Keuntungan</p>
+                    </div>
+                    <div class="w-10 h-10 rounded-xl {{ $totalKeuntungan >= 0 ? 'bg-emerald-50' : 'bg-red-50' }} flex items-center justify-center flex-shrink-0">
+                        @if($totalKeuntungan >= 0)
+                            <svg class="w-5 h-5 text-emerald-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z" clip-rule="evenodd" /></svg>
+                        @else
+                            <svg class="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M12 13a1 1 0 100 2h5a1 1 0 001-1V9a1 1 0 10-2 0v2.586l-4.293-4.293a1 1 0 00-1.414 0L8 9.586 3.707 5.293a1 1 0 00-1.414 1.414l5 5a1 1 0 001.414 0L11 9.414 14.586 13H12z" clip-rule="evenodd" /></svg>
+                        @endif
                     </div>
                 </div>
             </div>
