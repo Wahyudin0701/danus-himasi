@@ -2,7 +2,7 @@
     {{-- Page Header --}}
     <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
         <div>
-            <h1 class="text-2xl font-black text-gray-900">Kas <span class="text-blue-600">DANUS</span></h1>
+            <h1 class="text-2xl font-black text-gray-900">Kas Divisi <span class="text-blue-600">DANA DAN USAHA</span></h1>
             <p class="text-sm font-medium text-gray-500 mt-1">Kelola arus kas (pemasukan & pengeluaran) divisi Anda.</p>
         </div>
         @if($canEdit)

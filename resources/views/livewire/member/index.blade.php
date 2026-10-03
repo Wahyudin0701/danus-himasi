@@ -6,7 +6,7 @@
     {{-- Page Header --}}
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
-            <h1 class="text-xl md:text-2xl font-black text-gray-900">Dana dan Usaha</h1>
+            <h1 class="text-xl md:text-2xl font-black text-gray-900">Tim Divisi <span class="text-blue-600">DANA DAN USAHA</span></h1>
             <p class="text-xs md:text-sm font-medium text-gray-500 mt-1">Struktur kepengurusan dan anggota divisi.</p>
         </div>
 
