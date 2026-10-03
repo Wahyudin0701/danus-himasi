@@ -33,8 +33,10 @@ class Edit extends Component
         $singularRoles = ['Ketua Divisi', 'Wakil Ketua Divisi', 'Sekretaris Divisi', 'Bendahara Divisi'];
         $options = [];
 
-        // Ambil jabatan yang sudah dipakai oleh user LAIN
-        $usedJabatan = User::where('id', '!=', $this->member->id)->pluck('jabatan')->toArray();
+        // Ambil jabatan yang sudah dipakai oleh user LAIN di periode yang sama
+        $usedJabatan = User::where('id', '!=', $this->member->id)
+                           ->where('periode_id', $this->member->periode_id)
+                           ->pluck('jabatan')->toArray();
 
         foreach ($singularRoles as $role) {
             if (!in_array($role, $usedJabatan)) {
@@ -70,11 +72,10 @@ class Edit extends Component
     public function save()
     {
         $this->validate([
-            'name' => 'required||max:255',
-            'nim' => 'required||unique:users,nim,'.$this->member->id,
-            'angkatan' => 'required||max:10',
-            'jabatan' => 'required|',
-            'email' => 'required|email|unique:users,email,'.$this->member->id,
+            'name' => 'required|max:255',
+            'nim' => 'required|unique:users,nim,'.$this->member->id,
+            'angkatan' => 'required|max:10',
+            'jabatan' => 'required',
             'password' => 'nullable|min:6',
         ]);
 
@@ -82,7 +83,10 @@ class Edit extends Component
         $isSingular = in_array($this->jabatan, $singularRoles) || str_starts_with($this->jabatan, 'Ketua Bidang');
 
         if ($isSingular) {
-            $exists = User::where('jabatan', $this->jabatan)->where('id', '!=', $this->member->id)->exists();
+            $exists = User::where('jabatan', $this->jabatan)
+                          ->where('id', '!=', $this->member->id)
+                          ->where('periode_id', $this->member->periode_id)
+                          ->exists();
             if ($exists) {
                 $this->addError('jabatan', "Jabatan '{$this->jabatan}' hanya bisa diisi oleh 1 orang.");
                 return;
@@ -109,7 +113,6 @@ class Edit extends Component
             'name' => $this->name,
             'nim' => $this->nim,
             'angkatan' => $this->angkatan,
-            'email' => $this->email,
         ];
 
         // Jika dia adalah kadiv atau wakadiv dari awal, JANGAN ubah role dan jabatannya (dikunci permanen)
