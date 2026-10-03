@@ -22,7 +22,7 @@ new class extends Component
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
         </button>
         
-        <img src="{{ asset('Logo_Himasi_Store.jpg') }}" alt="Logo Danus" class="w-7 h-7 md:w-8 md:h-8 rounded-full object-cover shadow-sm border border-gray-100 flex-shrink-0">
+        <img src="{{ asset('Logo_Himasi_Store.jpg') }}" alt="Logo Danus" class="w-7 h-7 md:w-8 md:h-8 rounded-full object-cover shadow-sm border border-gray-100 flex-shrink-0 lg:hidden">
 
         <h1 class="text-base md:text-lg font-bold text-gray-900 truncate">
             @php
