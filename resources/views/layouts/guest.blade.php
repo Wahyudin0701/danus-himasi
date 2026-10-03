@@ -21,7 +21,7 @@
             <div class="mb-8 flex flex-col items-center">
                 <img src="{{ asset('Logo_Himasi_Store.jpg') }}" alt="Logo Himasi" class="w-24 h-24 rounded-full object-cover shadow-lg mb-4 border-2 border-white">
                 <div class="text-center">
-                    <p class="font-black text-xl text-blue-900 tracking-tight">SISTEM INFORMASI</p>
+                    <p class="font-black text-xl text-blue-900 tracking-tight">DANUS HIMASI</p>
                     <p class="text-xs font-bold text-orange-500 tracking-widest mt-1">UNIVERSITAS JAMBI</p>
                 </div>
             </div>
