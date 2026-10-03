@@ -35,11 +35,27 @@ class LoginForm extends Form
 
         RateLimiter::clear($this->throttleKey());
 
+        $user = Auth::user();
+
+        // Admin can always login — no period restriction
+        if ($user->role !== 'admin') {
+            $activePeriode = \App\Models\Periode::active();
+
+            if (!$activePeriode || $user->periode_id !== $activePeriode->id) {
+                Auth::logout();
+                throw ValidationException::withMessages([
+                    'form.nim' => 'Akun Anda tidak aktif pada periode kepengurusan saat ini (' .
+                                  ($activePeriode ? $activePeriode->name : 'belum ada periode aktif') .
+                                  '). Hubungi administrator.',
+                ]);
+            }
+        }
+
         \App\Models\ActivityLog::create([
-            'user_id' => Auth::id(),
-            'action' => 'LOGIN',
-            'description' => Auth::user()->name . ' berhasil masuk (login) ke sistem.',
-            'ip_address' => request()->ip()
+            'user_id'     => $user->id,
+            'action'      => 'LOGIN',
+            'description' => $user->name . ' berhasil masuk (login) ke sistem.',
+            'ip_address'  => request()->ip()
         ]);
     }
 

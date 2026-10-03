@@ -1,9 +1,11 @@
-<?php
+﻿<?php
 
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Carbon\Carbon;
 
 class Project extends Model
@@ -22,6 +24,7 @@ class Project extends Model
         'start_date',
         'end_date',
         'created_by',
+        'periode_id',
     ];
 
     protected $casts = [
@@ -32,17 +35,22 @@ class Project extends Model
         'pendapatan' => 'decimal:2',
     ];
 
-    public function creator()
+    public function creator(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by');
     }
 
-    public function members()
+    public function periode(): BelongsTo
+    {
+        return $this->belongsTo(Periode::class);
+    }
+
+    public function members(): HasMany
     {
         return $this->hasMany(ProjectMember::class);
     }
 
-    public function finances()
+    public function finances(): HasMany
     {
         return $this->hasMany(ProjectFinance::class);
     }

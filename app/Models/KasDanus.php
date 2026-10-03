@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 namespace App\Models;
 
@@ -16,6 +16,7 @@ class KasDanus extends Model
         'type',
         'amount',
         'description',
+        'periode_id',
     ];
 
     protected $casts = [
@@ -26,5 +27,10 @@ class KasDanus extends Model
     public function creator(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function periode(): BelongsTo
+    {
+        return $this->belongsTo(Periode::class);
     }
 }

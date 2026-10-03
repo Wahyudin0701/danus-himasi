@@ -63,9 +63,16 @@ use Illuminate\Support\Facades\Auth;
             </a>
         </div>
 
-        {{-- Admin Only: Log Aktivitas --}}
+        {{-- Admin Only --}}
         @if(auth()->user()->role === 'admin')
         <div class="pt-6">
+            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-2 mb-3">SISTEM (ADMIN)</p>
+
+            <a href="{{ route('periode.index') }}" wire:navigate class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all mt-1 {{ request()->routeIs('periode.*') ? 'bg-blue-600 text-white shadow-md shadow-blue-200' : 'text-gray-500 hover:bg-gray-50 hover:text-blue-600' }}">
+                <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                Kelola Periode
+            </a>
+
             <a href="{{ route('system.logs') }}" wire:navigate class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all mt-1 {{ request()->routeIs('system.logs') ? 'bg-blue-600 text-white shadow-md shadow-blue-200' : 'text-gray-500 hover:bg-gray-50 hover:text-blue-600' }}">
                 <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
                 Log Aktivitas Sistem

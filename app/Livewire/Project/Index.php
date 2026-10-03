@@ -4,6 +4,7 @@ namespace App\Livewire\Project;
 
 use Livewire\Component;
 use App\Models\Project;
+use App\Models\Periode;
 use Illuminate\Support\Facades\DB;
 
 class Index extends Component
@@ -32,7 +33,8 @@ class Index extends Component
     {
         $userId = auth()->id();
 
-        $query = Project::with('creator', 'members.user')->latest();
+        $activePeriodeId = optional(Periode::active())->id;
+        $query = Project::with('creator', 'members.user')->where('periode_id', $activePeriodeId)->latest();
 
         if ($this->filter === 'mine') {
             $query->whereHas('members', function ($q) use ($userId) {

@@ -4,6 +4,7 @@ namespace App\Livewire\Kas;
 
 use Livewire\Component;
 use App\Models\KasDanus;
+use App\Models\Periode;
 use Illuminate\Support\Facades\DB;
 use Livewire\WithPagination;
 
@@ -77,6 +78,7 @@ class Index extends Component
             KasDanus::create([
                 'created_by' => auth()->id(),
                 'date' => $this->date,
+                'periode_id' => optional(Periode::active())->id,
                 'type' => $this->type,
                 'amount' => $this->amount,
                 'description' => $this->description,
@@ -97,11 +99,12 @@ class Index extends Component
 
     public function render()
     {
-        $totalPemasukan = KasDanus::where('type', 'pemasukan')->sum('amount');
-        $totalPengeluaran = KasDanus::where('type', 'pengeluaran')->sum('amount');
+        $activePeriodeId = optional(Periode::active())->id;
+        $totalPemasukan = KasDanus::where('type', 'pemasukan')->where('periode_id', $activePeriodeId)->sum('amount');
+        $totalPengeluaran = KasDanus::where('type', 'pengeluaran')->where('periode_id', $activePeriodeId)->sum('amount');
         $saldo = $totalPemasukan - $totalPengeluaran;
 
-        $records = KasDanus::with('creator')->latest('date')->latest('id')->paginate(15);
+        $records = KasDanus::with('creator')->where('periode_id', $activePeriodeId)->latest('date')->latest('id')->paginate(15);
         $canEdit = in_array(auth()->user()->role, ['admin', 'kadiv', 'wakadiv', 'bendahara']);
 
         return view('livewire.kas.index', [

@@ -4,15 +4,15 @@ namespace App\Livewire\Chat;
 
 use Livewire\Component;
 use App\Models\Message;
+use App\Models\Periode;
 use Illuminate\Support\Facades\Auth;
-use Carbon\Carbon;
 
 class Index extends Component
 {
     public string $messageInput = '';
     public int $pollInterval = 3000; // 3 seconds
-    
-    // Edit state
+
+    // Reply & Edit state
     public ?int $replyingToMessageId = null;
     public ?int $editingMessageId = null;
     public string $editMessageInput = '';
@@ -25,24 +25,29 @@ class Index extends Component
 
         Message::create([
             'sender_id'   => Auth::id(),
-            'receiver_id' => null, // null means group chat
+            'receiver_id' => null, // null = group chat
             'reply_to_id' => $this->replyingToMessageId,
             'body'        => $this->messageInput,
+            'periode_id'  => optional(Periode::active())->id,
         ]);
 
         $this->messageInput = '';
         $this->replyingToMessageId = null;
     }
 
-        public function getReplyingToMessageProperty()
+    public function getReplyingToMessageProperty()
     {
-        return $this->replyingToMessageId ? Message::withTrashed()->with(['sender', 'replyTo' => function($q) { $q->withTrashed()->with('sender'); }])->find($this->replyingToMessageId) : null;
+        return $this->replyingToMessageId
+            ? Message::withTrashed()->with(['sender', 'replyTo' => function ($q) {
+                $q->withTrashed()->with('sender');
+            }])->find($this->replyingToMessageId)
+            : null;
     }
 
     public function startReply(int $messageId)
     {
         $this->replyingToMessageId = $messageId;
-        $this->cancelEdit(); // Cannot edit and reply at the same time
+        $this->cancelEdit();
     }
 
     public function cancelReply()
@@ -53,14 +58,12 @@ class Index extends Component
     public function startEdit(int $messageId)
     {
         $message = Message::find($messageId);
-        
-        // Ensure message exists, belongs to user, and is within 15 minutes
+
         if ($message && $message->sender_id === Auth::id() && $message->created_at->diffInMinutes(now()) <= 15) {
             $this->editingMessageId = $message->id;
             $this->editMessageInput = $message->body;
         } else {
             $this->cancelEdit();
-            // Dispatch a browser event to show error if needed, but for now just cancel
             $this->dispatch('chat-error', 'Waktu edit sudah habis (maks 15 menit) atau pesan tidak ditemukan.');
         }
     }
@@ -78,22 +81,21 @@ class Index extends Component
         $this->validate(['editMessageInput' => 'required|string|max:2000']);
 
         $message = Message::find($this->editingMessageId);
-        
+
         if ($message && $message->sender_id === Auth::id() && $message->created_at->diffInMinutes(now()) <= 15) {
             $message->update([
-                'body' => $this->editMessageInput,
-                'is_edited' => true
+                'body'      => $this->editMessageInput,
+                'is_edited' => true,
             ]);
         }
-        
+
         $this->cancelEdit();
     }
 
     public function deleteMessage(int $messageId)
     {
         $message = Message::find($messageId);
-        
-        // Ensure message exists, belongs to user, and is within 15 minutes
+
         if ($message && $message->sender_id === Auth::id() && $message->created_at->diffInMinutes(now()) <= 15) {
             $message->delete();
         } else {
@@ -103,16 +105,22 @@ class Index extends Component
 
     public function render()
     {
-        // Get all group messages
-        $messages = Message::withTrashed()->with(['sender', 'replyTo' => function($q) { $q->withTrashed()->with('sender'); }])
+        $activePeriodeId = optional(Periode::active())->id;
+
+        $messages = Message::withTrashed()
+            ->with(['sender', 'replyTo' => function ($q) {
+                $q->withTrashed()->with('sender');
+            }])
             ->whereNull('receiver_id')
+            ->where('periode_id', $activePeriodeId)
             ->orderBy('created_at', 'asc')
             ->get();
 
-        $users = \App\Models\User::get(['id', 'name']);
+        $users = \App\Models\User::where('periode_id', $activePeriodeId)->get(['id', 'name']);
+
         return view('livewire.chat.index', [
             'messages' => $messages,
-            'users' => $users
+            'users'    => $users,
         ])->layout('layouts.app');
     }
 }

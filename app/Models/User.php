@@ -21,6 +21,7 @@ class User extends Authenticatable
         'angkatan',
         'jabatan',
         'photo',
+        'periode_id',
     ];
 
     protected $hidden = [
@@ -38,5 +39,10 @@ class User extends Authenticatable
     public function bidang(): BelongsTo
     {
         return $this->belongsTo(Bidang::class);
+    }
+
+    public function periode(): BelongsTo
+    {
+        return $this->belongsTo(Periode::class);
     }
 }

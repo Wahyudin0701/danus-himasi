@@ -3,6 +3,7 @@
 namespace App\Livewire\Member;
 
 use App\Models\User;
+use App\Models\Periode;
 use App\Models\Bidang;
 use Illuminate\Support\Facades\Hash;
 use Livewire\Component;
@@ -108,6 +109,7 @@ class Create extends Component
             'bidang_id' => $bidang_id,
             'email' => $this->email,
             'password' => Hash::make($this->password),
+            'periode_id' => optional(Periode::active())->id,
         ]);
 
         return redirect()->route('members.index')->with('message', 'Pengurus berhasil ditambahkan!');
