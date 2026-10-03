@@ -3,7 +3,11 @@
     @if(auth()->user()->role === 'admin')
         {{-- ADMINISTRATOR DASHBOARD --}}
         <div class="mb-8">
-            <p class="text-xs font-bold text-blue-500 uppercase tracking-widest mb-2">SISTEM ADMINISTRATOR</p>
+            <div class="flex items-center gap-3 mb-2">
+                <p class="text-xs font-bold text-blue-500 uppercase tracking-widest">SISTEM ADMINISTRATOR</p>
+                <span class="w-1.5 h-1.5 rounded-full bg-gray-300"></span>
+                <p class="text-xs font-bold text-blue-600 uppercase tracking-widest">PERIODE {{ \App\Models\Periode::active()?->name ?? '-' }}</p>
+            </div>
             <div class="flex items-center justify-between">
                 <div>
                     <h1 class="text-[28px] font-black text-gray-900 leading-tight">
@@ -26,7 +30,11 @@
         {{-- KADIV, WAKADIV & ANGGOTA DASHBOARD --}}
         {{-- Greeting Banner --}}
         <div class="mb-8">
-            <p class="text-xs font-bold text-green-500 uppercase tracking-widest mb-2">DANA DAN USAHA</p>
+            <div class="flex items-center gap-3 mb-2">
+                <p class="text-xs font-bold text-green-500 uppercase tracking-widest">DANA DAN USAHA</p>
+                <span class="w-1.5 h-1.5 rounded-full bg-gray-300"></span>
+                <p class="text-xs font-bold text-blue-600 uppercase tracking-widest">PERIODE {{ \App\Models\Periode::active()?->name ?? '-' }}</p>
+            </div>
             <div class="flex items-center justify-between">
                 <div>
                     <h1 class="text-[28px] font-black text-gray-900 leading-tight">

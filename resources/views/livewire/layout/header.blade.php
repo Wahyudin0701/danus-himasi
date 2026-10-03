@@ -79,12 +79,8 @@ new class extends Component
                     @endif
                 </div>
                 <div class="hidden md:block text-left">
-                    <p class="text-sm font-bold text-gray-900 leading-tight">{{ auth()->user()->name ?? '' }}</p>
-                    <p class="text-[10px] font-bold text-gray-500 uppercase tracking-wider mt-0.5">
-                        {{ auth()->user()->nim ?? 'NIM' }}
-                        <span class="mx-1 text-gray-300">|</span>
-                        <span class="text-blue-600">Periode {{ \App\Models\Periode::active()?->name ?? '-' }}</span>
-                    </p>
+                    <p class="text-sm font-bold text-gray-900">{{ auth()->user()->name ?? '' }}</p>
+                    <p class="text-xs text-gray-500 uppercase tracking-wider">{{ auth()->user()->nim ?? 'NIM' }}</p>
                 </div>
                 <svg class="w-4 h-4 text-gray-400 transition-transform" :class="open ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
