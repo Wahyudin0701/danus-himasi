@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 namespace App\Models;
 
@@ -20,7 +20,7 @@ class KasDanus extends Model
     ];
 
     protected $casts = [
-        'date' => 'date',
+        'date'   => 'date',
         'amount' => 'decimal:2',
     ];
 

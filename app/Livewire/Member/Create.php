@@ -24,37 +24,26 @@ class Create extends Component
 
     public function getJabatanOptionsProperty()
     {
+        $activePeriodeId = optional(Periode::active())->id;
         $singularRoles = ['Ketua Divisi', 'Wakil Ketua Divisi', 'Sekretaris Divisi', 'Bendahara Divisi'];
         $options = [];
-        
-        $usedJabatan = User::pluck('jabatan')->toArray();
+
+        // Check singular roles only within the active periode
+        $usedJabatan = User::where('periode_id', $activePeriodeId)->pluck('jabatan')->toArray();
 
         foreach ($singularRoles as $role) {
             if (!in_array($role, $usedJabatan)) {
-                $options[] = [
-                    'value' => $role,
-                    'label' => $role,
-                    'disabled' => false
-                ];
+                $options[] = ['value' => $role, 'label' => $role, 'disabled' => false];
             }
         }
 
-        foreach(Bidang::all() as $bidang) {
+        foreach (Bidang::all() as $bidang) {
             $ketua = 'Ketua Bidang ' . $bidang->name;
             if (!in_array($ketua, $usedJabatan)) {
-                $options[] = [
-                    'value' => $ketua,
-                    'label' => $ketua,
-                    'disabled' => false
-                ];
+                $options[] = ['value' => $ketua, 'label' => $ketua, 'disabled' => false];
             }
-
             $anggota = 'Anggota Bidang ' . $bidang->name;
-            $options[] = [
-                'value' => $anggota,
-                'label' => $anggota,
-                'disabled' => false
-            ];
+            $options[] = ['value' => $anggota, 'label' => $anggota, 'disabled' => false];
         }
 
         return $options;
@@ -63,26 +52,26 @@ class Create extends Component
     public function save()
     {
         $this->validate([
-            'name' => 'required||max:255',
-            'nim' => 'required||unique:users,nim',
-            'angkatan' => 'required||max:10',
-            'jabatan' => 'required|',
-'password' => 'required|min:6',
+            'name'     => 'required|max:255',
+            'nim'      => 'required|unique:users,nim',
+            'angkatan' => 'required|max:10',
+            'jabatan'  => 'required',
+            'password' => 'required|min:6',
         ]);
 
-        // Uniqueness validation for specific singular roles
+        $activePeriodeId = optional(Periode::active())->id;
+
         $singularRoles = ['Ketua Divisi', 'Wakil Ketua Divisi', 'Sekretaris Divisi', 'Bendahara Divisi'];
         $isSingular = in_array($this->jabatan, $singularRoles) || str_starts_with($this->jabatan, 'Ketua Bidang');
 
         if ($isSingular) {
-            $exists = User::where('jabatan', $this->jabatan)->exists();
+            $exists = User::where('jabatan', $this->jabatan)->where('periode_id', $activePeriodeId)->exists();
             if ($exists) {
-                $this->addError('jabatan', "Jabatan '{$this->jabatan}' hanya bisa diisi oleh 1 orang.");
+                $this->addError('jabatan', "Jabatan '{$this->jabatan}' hanya bisa diisi oleh 1 orang per periode.");
                 return;
             }
         }
 
-        // Determine role & bidang_id based on jabatan
         $role = 'anggota';
         $bidang_id = null;
 
@@ -91,7 +80,6 @@ class Create extends Component
         elseif ($this->jabatan === 'Sekretaris Divisi') $role = 'sekretaris';
         elseif ($this->jabatan === 'Bendahara Divisi') $role = 'bendahara';
         else {
-            // Find bidang if it's Ketua Bidang or Anggota Bidang
             foreach (Bidang::all() as $bidang) {
                 if ($this->jabatan === 'Ketua Bidang ' . $bidang->name || $this->jabatan === 'Anggota Bidang ' . $bidang->name) {
                     $bidang_id = $bidang->id;
@@ -101,15 +89,15 @@ class Create extends Component
         }
 
         User::create([
-            'name' => $this->name,
-            'nim' => $this->nim,
-            'angkatan' => $this->angkatan,
-            'jabatan' => $this->jabatan,
-            'role' => $role,
-            'bidang_id' => $bidang_id,
-            'email' => $this->email,
-            'password' => Hash::make($this->password),
-            'periode_id' => optional(Periode::active())->id,
+            'name'       => $this->name,
+            'nim'        => $this->nim,
+            'angkatan'   => $this->angkatan,
+            'jabatan'    => $this->jabatan,
+            'role'       => $role,
+            'bidang_id'  => $bidang_id,
+            'email'      => $this->email,
+            'password'   => Hash::make($this->password),
+            'periode_id' => $activePeriodeId,
         ]);
 
         return redirect()->route('members.index')->with('message', 'Pengurus berhasil ditambahkan!');

@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 namespace App\Models;
 
@@ -28,11 +28,11 @@ class Project extends Model
     ];
 
     protected $casts = [
-        'start_date' => 'date',
-        'end_date' => 'date',
+        'start_date'    => 'date',
+        'end_date'      => 'date',
         'target_amount' => 'decimal:2',
-        'modal' => 'decimal:2',
-        'pendapatan' => 'decimal:2',
+        'modal'         => 'decimal:2',
+        'pendapatan'    => 'decimal:2',
     ];
 
     public function creator(): BelongsTo
@@ -65,7 +65,7 @@ class Project extends Model
 
                 $today = Carbon::today();
                 $start = Carbon::parse($attributes['start_date'])->startOfDay();
-                $end = empty($attributes['end_date']) ? null : Carbon::parse($attributes['end_date'])->endOfDay();
+                $end   = empty($attributes['end_date']) ? null : Carbon::parse($attributes['end_date'])->endOfDay();
 
                 if ($today->lt($start)) {
                     return 'planning';
