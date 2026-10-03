@@ -33,8 +33,9 @@ class Dashboard extends Component
                                  ->take(8)
                                  ->get();
                                  
-        $anggota = User::whereIn('role', ['anggota', 'sekretaris', 'bendahara'])
+        $anggota = User::where('role', '!=', 'admin')
                        ->where('periode_id', $activePeriodeId)
+                       ->orderByRaw("FIELD(role, 'kadiv', 'wakadiv', 'sekretaris', 'bendahara', 'anggota')")
                        ->get();
 
         return view('livewire.dashboard', compact(
