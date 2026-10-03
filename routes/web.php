@@ -49,5 +49,6 @@ Route::get('projects/{project}/rab/edit', \App\Livewire\Rab\Edit::class)->middle
 Route::get('projects/{project}/finance/{type}', \App\Livewire\Project\Finance::class)->middleware(['auth'])->name('projects.finance');
 
 Route::get('kas', \App\Livewire\Kas\Index::class)->middleware(['auth'])->name('kas.index');
+Route::get('dokumen', \App\Livewire\Dokumen\Index::class)->middleware(['auth'])->name('dokumen.index');
 
 require __DIR__.'/auth.php';

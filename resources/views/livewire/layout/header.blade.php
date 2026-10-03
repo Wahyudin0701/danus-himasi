@@ -30,6 +30,8 @@ new class extends Component
                     echo 'Kelola Bidang';
                 } elseif (str_starts_with($routeName, 'kas.')) {
                     echo 'Kas Danus';
+                } elseif (str_starts_with($routeName, 'dokumen.')) {
+                    echo 'Dokumen Divisi';
                 } elseif ($routeName === 'dashboard') {
                     $role = auth()->user()->role;
                     if ($role === 'kadiv') {
