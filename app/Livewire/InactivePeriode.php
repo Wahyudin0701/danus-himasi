@@ -6,14 +6,15 @@ use Livewire\Component;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Periode;
 use Livewire\Attributes\Layout;
+use App\Livewire\Actions\Logout;
 
 #[Layout('layouts.guest')]
 class InactivePeriode extends Component
 {
-    public function logout()
+    public function logout(Logout $logout)
     {
-        Auth::logout();
-        return redirect()->route('login');
+        $logout();
+        $this->redirect('/', navigate: true);
     }
 
     public function render()
