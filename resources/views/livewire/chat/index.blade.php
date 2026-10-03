@@ -183,12 +183,13 @@
         <div class="p-4 relative" x-data="chatMention" x-on:click.outside="showMentions = false">
 
             {{-- Mention dropdown --}}
-            <div x-show="showMentions && filteredUsers.length > 0"
-                 x-cloak
-                 x-transition:enter="transition ease-out duration-100"
-                 x-transition:enter-start="opacity-0 -translate-y-2"
-                 x-transition:enter-end="opacity-100 translate-y-0"
-                 class="absolute bottom-full left-0 right-0 mb-2 mx-0 bg-white border border-gray-200 rounded-xl shadow-2xl z-50 overflow-hidden max-h-52 overflow-y-auto">
+            <div wire:ignore>
+                <div x-show="showMentions && filteredUsers.length > 0"
+                     x-cloak
+                     x-transition:enter="transition ease-out duration-100"
+                     x-transition:enter-start="opacity-0 -translate-y-2"
+                     x-transition:enter-end="opacity-100 translate-y-0"
+                     class="absolute bottom-full left-0 right-0 mb-2 mx-0 bg-white border border-gray-200 rounded-xl shadow-2xl z-50 overflow-hidden max-h-52 overflow-y-auto">
                 
                 <div class="px-3 py-2 border-b border-gray-100 bg-gray-50">
                     <span class="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Tag Anggota</span>
@@ -199,12 +200,12 @@
                         @click="selectUser(user.name)"
                         @mousedown.prevent
                         :class="{'bg-blue-50': index === selectedIndex}"
-                        :class="{'bg-blue-50': index === selectedIndex}"
                         class="w-full text-left px-4 py-2.5 hover:bg-blue-50 flex items-center gap-3 transition-colors border-b border-gray-50 last:border-0">
                         <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-xs font-bold text-blue-600 border border-blue-200 flex-shrink-0" x-text="user.name.charAt(0)"></div>
                         <span class="text-sm font-bold text-gray-800" x-text="user.name"></span>
                     </button>
                 </template>
+                </div>
             </div>
 
             <form wire:submit="sendMessage" class="flex items-end gap-3">
