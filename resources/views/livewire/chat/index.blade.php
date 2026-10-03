@@ -115,7 +115,7 @@
                                                         Edit
                                                     </button>
                                                     {{-- Delete --}}
-                                                    <button @click="menuOpen = false" wire:click="deleteMessage({{ $message->id }})" wire:confirm="Hapus pesan ini?" class="w-full text-left px-4 py-2 text-xs font-bold text-red-600 hover:bg-red-50 flex items-center gap-2 border-t border-gray-100 mt-1 pt-1">
+                                                    <button @click="menuOpen = false; $dispatch('confirm-delete', { id: {{ $message->id }} })" class="w-full text-left px-4 py-2 text-xs font-bold text-red-600 hover:bg-red-50 flex items-center gap-2 border-t border-gray-100 mt-1 pt-1">
                                                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
                                                         Hapus
                                                     </button>
@@ -220,6 +220,60 @@
         </div>
     </div>
     @endif
+
+    {{-- Delete Confirmation Modal --}}
+    <div x-data="{ showDeleteModal: false, deleteId: null }"
+         x-on:confirm-delete.window="showDeleteModal = true; deleteId = $event.detail.id"
+         x-cloak>
+        
+        {{-- Backdrop --}}
+        <div x-show="showDeleteModal"
+             x-transition:enter="transition ease-out duration-200"
+             x-transition:enter-start="opacity-0"
+             x-transition:enter-end="opacity-100"
+             x-transition:leave="transition ease-in duration-150"
+             x-transition:leave-start="opacity-100"
+             x-transition:leave-end="opacity-0"
+             class="fixed inset-0 bg-black/40 backdrop-blur-sm z-[60]"
+             @click="showDeleteModal = false">
+        </div>
+
+        {{-- Modal --}}
+        <div x-show="showDeleteModal"
+             x-transition:enter="transition ease-out duration-200"
+             x-transition:enter-start="opacity-0 scale-95"
+             x-transition:enter-end="opacity-100 scale-100"
+             x-transition:leave="transition ease-in duration-150"
+             x-transition:leave-start="opacity-100 scale-100"
+             x-transition:leave-end="opacity-0 scale-95"
+             class="fixed inset-0 z-[70] flex items-center justify-center p-4">
+            
+            <div class="bg-white rounded-2xl shadow-2xl border border-gray-100 w-full max-w-sm overflow-hidden">
+                {{-- Icon & Title --}}
+                <div class="p-6 text-center">
+                    <div class="mx-auto w-14 h-14 bg-red-50 rounded-full flex items-center justify-center mb-4">
+                        <svg class="w-7 h-7 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-lg font-black text-gray-900 mb-1">Hapus Pesan?</h3>
+                    <p class="text-sm text-gray-500 font-medium">Pesan yang dihapus akan ditandai sebagai "telah dihapus" dan tidak bisa dikembalikan.</p>
+                </div>
+
+                {{-- Actions --}}
+                <div class="flex border-t border-gray-100">
+                    <button @click="showDeleteModal = false; deleteId = null"
+                            class="flex-1 px-4 py-3.5 text-sm font-bold text-gray-600 hover:bg-gray-50 transition-colors">
+                        Batal
+                    </button>
+                    <button @click="$wire.deleteMessage(deleteId); showDeleteModal = false; deleteId = null"
+                            class="flex-1 px-4 py-3.5 text-sm font-bold text-red-600 hover:bg-red-50 transition-colors border-l border-gray-100">
+                        Hapus
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script>
         // User list for @mention — injected safely from server
