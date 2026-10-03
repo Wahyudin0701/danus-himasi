@@ -55,5 +55,6 @@ Route::get('projects/{project}/finance/{type}', \App\Livewire\Project\Finance::c
 Route::get('kas', \App\Livewire\Kas\Index::class)->middleware(['auth'])->name('kas.index');
 Route::get('dokumen', \App\Livewire\Dokumen\Index::class)->middleware(['auth'])->name('dokumen.index');
 Route::get('system-logs', \App\Livewire\SystemLog\Index::class)->middleware(['auth'])->name('system.logs');
+Route::get('chat', \App\Livewire\Chat\Index::class)->middleware(['auth'])->name('chat.index');
 
 require __DIR__.'/auth.php';
