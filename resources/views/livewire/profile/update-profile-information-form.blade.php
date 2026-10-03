@@ -2,12 +2,17 @@
 
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use Livewire\Volt\Component;
+use Livewire\WithFileUploads;
 
 new class extends Component
 {
+    use WithFileUploads;
+
     public string $name = '';
+    public $photo; // For new uploaded photo
     public string $angkatan = '';
     /**
      * Mount the component.
@@ -28,9 +33,21 @@ new class extends Component
 
         $validated = $this->validate([
             'name' => ['required', 'string', 'max:255'],
+            'photo' => ['nullable', 'image', 'max:2048'], // 2MB Max
         ]);
 
         $user->fill($validated);
+
+        if ($this->photo) {
+            // Delete old photo if exists
+            if ($user->photo && Storage::disk('public')->exists($user->photo)) {
+                Storage::disk('public')->delete($user->photo);
+            }
+            // Store new photo
+            $path = $this->photo->store('profile-photos', 'public');
+            $user->photo = $path;
+        }
+
         $user->save();
 
         // Log the activity
@@ -54,6 +71,31 @@ new class extends Component
     </header>
 
     <form wire:submit="updateProfileInformation" class="mt-6 space-y-5">
+        
+        {{-- Profile Photo --}}
+        <div class="flex items-center gap-6 mb-6">
+            <div class="relative w-20 h-20 rounded-full bg-gray-100 flex items-center justify-center border-4 border-white shadow-md overflow-hidden shrink-0">
+                @if ($photo)
+                    <img src="{{ $photo->temporaryUrl() }}" class="w-full h-full object-cover">
+                @elseif (auth()->user()->photo)
+                    <img src="{{ asset('storage/' . auth()->user()->photo) }}" class="w-full h-full object-cover">
+                @else
+                    <span class="text-2xl font-black text-gray-400">{{ strtoupper(substr(auth()->user()->name, 0, 1)) }}</span>
+                @endif
+            </div>
+            <div>
+                <label class="block text-sm font-bold text-gray-900 mb-1">Foto Profil</label>
+                <p class="text-xs text-gray-500 mb-3">Format JPG, PNG, atau GIF. Maksimal 2MB.</p>
+                <div class="relative">
+                    <input type="file" wire:model="photo" id="photo" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+                    <button type="button" class="px-4 py-2 bg-white border border-gray-200 text-gray-700 text-xs font-bold rounded-xl hover:bg-gray-50 transition-colors shadow-sm focus:outline-none">
+                        Pilih Foto Baru
+                    </button>
+                </div>
+                <div wire:loading wire:target="photo" class="text-xs text-blue-600 font-bold mt-2">Mengunggah...</div>
+                <x-input-error class="mt-2" :messages="$errors->get('photo')" />
+            </div>
+        </div>
         
         {{-- NIM & Angkatan (Readonly) --}}
         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">

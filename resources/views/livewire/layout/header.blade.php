@@ -71,8 +71,12 @@ new class extends Component
         <div class="relative" x-data="{ open: false }" @click.outside="open = false">
             <!-- Trigger Button -->
             <button @click="open = !open" class="flex items-center gap-3 border-l border-gray-200 pl-6 focus:outline-none hover:opacity-80 transition-opacity">
-                <div class="w-9 h-9 rounded-full bg-blue-600 flex items-center justify-center text-sm font-bold text-white flex-shrink-0">
-                    {{ strtoupper(substr(auth()->user()->name ?? 'U', 0, 1)) }}
+                <div class="w-9 h-9 rounded-full bg-blue-600 flex items-center justify-center text-sm font-bold text-white flex-shrink-0 overflow-hidden">
+                    @if(auth()->user()->photo)
+                        <img src="{{ asset('storage/' . auth()->user()->photo) }}" alt="Foto" class="w-full h-full object-cover">
+                    @else
+                        {{ strtoupper(substr(auth()->user()->name ?? 'U', 0, 1)) }}
+                    @endif
                 </div>
                 <div class="hidden md:block text-left">
                     <p class="text-sm font-bold text-gray-900">{{ auth()->user()->name ?? '' }}</p>

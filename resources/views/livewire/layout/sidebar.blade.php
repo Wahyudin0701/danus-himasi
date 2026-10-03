@@ -99,8 +99,12 @@
     <div class="px-6 py-5 border-t border-gray-100">
         <button wire:click="logout" class="flex items-center justify-between w-full text-left group">
             <div class="flex items-center gap-3">
-                <div class="w-9 h-9 rounded-full bg-blue-600 flex items-center justify-center text-xs font-bold text-white shadow-md">
-                    {{ strtoupper(substr(auth()->user()->name ?? 'U', 0, 1)) }}
+                <div class="w-9 h-9 rounded-full bg-blue-600 flex items-center justify-center text-xs font-bold text-white shadow-md overflow-hidden border-2 border-white">
+                    @if(auth()->user()->photo)
+                        <img src="{{ asset('storage/' . auth()->user()->photo) }}" alt="Foto" class="w-full h-full object-cover">
+                    @else
+                        {{ strtoupper(substr(auth()->user()->name ?? 'U', 0, 1)) }}
+                    @endif
                 </div>
                 <div>
                     <p class="text-sm font-bold text-gray-900 group-hover:text-blue-600 transition-colors">{{ auth()->user()->nim ?? 'Logout' }}</p>

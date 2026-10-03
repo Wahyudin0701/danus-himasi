@@ -24,8 +24,12 @@
         @foreach($pimpinans as $pimpinan)
         <div @click="m = JSON.parse($el.dataset.member); showModal = true" data-member="{{ json_encode($pimpinan) }}" class="cursor-pointer bg-white border border-gray-100 rounded-2xl p-6 shadow-sm flex items-start gap-4 relative hover:border-gray-200 transition-colors">
             <!-- Avatar -->
-            <div class="w-14 h-14 rounded-full bg-emerald-50 border border-emerald-100 text-emerald-600 flex items-center justify-center text-xl font-bold flex-shrink-0">
-                {{ substr($pimpinan->name, 0, 1) }}
+            <div class="w-14 h-14 rounded-full bg-emerald-50 border border-emerald-100 text-emerald-600 flex items-center justify-center text-xl font-bold flex-shrink-0 overflow-hidden">
+                @if($pimpinan->photo)
+                    <img src="{{ asset('storage/' . $pimpinan->photo) }}" class="w-full h-full object-cover">
+                @else
+                    {{ substr($pimpinan->name, 0, 1) }}
+                @endif
             </div>
 
             <div class="flex-1 pt-1">
@@ -166,8 +170,13 @@
 
             <!-- Avatar Overlapping -->
             <div class="flex justify-center -mt-14 relative z-10">
-                <div class="w-28 h-28 rounded-full border-4 border-white bg-white text-indigo-600 flex items-center justify-center text-4xl font-bold shadow-sm">
-                    <span x-text="m ? m.name.charAt(0) : ''"></span>
+                <div class="w-28 h-28 rounded-full border-4 border-white bg-white text-indigo-600 flex items-center justify-center text-4xl font-bold shadow-sm overflow-hidden">
+                    <template x-if="m && m.photo">
+                        <img :src="'/storage/' + m.photo" class="w-full h-full object-cover">
+                    </template>
+                    <template x-if="!m || !m.photo">
+                        <span x-text="m ? m.name.charAt(0) : ''"></span>
+                    </template>
                 </div>
             </div>
 
