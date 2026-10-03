@@ -10,20 +10,16 @@ class PeriodeSeeder extends Seeder
 {
     public function run(): void
     {
-        // Create the two initial periods
-        $periode2024 = Periode::create([
-            'name'       => '2024/2025',
-            'year_start' => 2024,
-            'year_end'   => 2025,
-            'is_active'  => false,
-        ]);
+        // Use firstOrCreate to prevent duplicates if seeder is run multiple times
+        $periode2024 = Periode::firstOrCreate(
+            ['name' => '2024/2025'],
+            ['year_start' => 2024, 'year_end' => 2025, 'is_active' => false]
+        );
 
-        $periode2025 = Periode::create([
-            'name'       => '2025/2026',
-            'year_start' => 2025,
-            'year_end'   => 2026,
-            'is_active'  => true, // current active period
-        ]);
+        $periode2025 = Periode::firstOrCreate(
+            ['name' => '2025/2026'],
+            ['year_start' => 2025, 'year_end' => 2026, 'is_active' => true]
+        );
 
         $activeId = $periode2025->id;
 
