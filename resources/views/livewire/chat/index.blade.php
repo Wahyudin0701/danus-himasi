@@ -263,6 +263,52 @@
     @endif
 
     <script>
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('mentionHandler', () => ({
+                allUsers: @json($users->values()),
+                showMentions: false,
+                mentionQuery: '',
+                mentionStart: -1,
+
+                get filteredUsers() {
+                    if (this.mentionQuery === '') return this.allUsers;
+                    return this.allUsers.filter(u => u.name.toLowerCase().includes(this.mentionQuery.toLowerCase()));
+                },
+
+                handleInput(e) {
+                    const ta = e.target;
+                    const val = ta.value;
+                    const pos = ta.selectionStart;
+                    const textBefore = val.substring(0, pos);
+
+                    const match = textBefore.match(/(^|[\s
+])@([^\s@]*)$/);
+                    if (match) {
+                        this.mentionQuery = match[2];
+                        this.mentionStart = pos - match[2].length - 1; 
+                        this.showMentions = true;
+                    } else {
+                        this.showMentions = false;
+                        this.mentionQuery = '';
+                        this.mentionStart = -1;
+                    }
+                },
+
+                selectUser(name) {
+                    const ta = this.$refs.input;
+                    const val = ta.value;
+                    const before = val.substring(0, this.mentionStart);
+                    const after = val.substring(ta.selectionStart);
+                    const newVal = before + '@' + name + ' ' + after;
+                    ta.value = newVal;
+                    ta.dispatchEvent(new Event('input'));
+                    this.$wire.set('messageInput', newVal);
+                    this.showMentions = false;
+                    this.$nextTick(() => ta.focus());
+                }
+            }));
+        });
+
         document.addEventListener('livewire:initialized', () => {
             const scrollToBottom = () => {
                 const container = document.getElementById('chat-messages');
