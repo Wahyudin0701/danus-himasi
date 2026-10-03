@@ -1,4 +1,4 @@
-<div class="max-w-[1000px] mx-auto h-[calc(100vh-8rem)] min-h-[600px] flex flex-col bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
+<div class="w-full h-[calc(100vh-8rem)] min-h-[600px] flex flex-col bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
     
     {{-- Chat Header --}}
     <div class="px-6 py-4 border-b border-gray-100 bg-white flex items-center gap-4 flex-shrink-0 z-10 shadow-sm">
