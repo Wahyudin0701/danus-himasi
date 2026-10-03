@@ -2,18 +2,22 @@
 
     @if(auth()->user()->role === 'admin')
         {{-- ADMINISTRATOR DASHBOARD --}}
-        <div class="mb-8">
-            <div class="flex items-center gap-3 mb-2">
-                <p class="text-xs font-bold text-blue-500 uppercase tracking-widest">SISTEM ADMINISTRATOR</p>
-                <span class="w-1.5 h-1.5 rounded-full bg-gray-300"></span>
-                <p class="text-xs font-bold text-blue-600 uppercase tracking-widest">PERIODE {{ \App\Models\Periode::active()?->name ?? '-' }}</p>
+        <div class="mb-8 flex flex-col md:flex-row md:items-start justify-between gap-4">
+            <div>
+                <p class="text-xs font-bold text-blue-500 uppercase tracking-widest mb-2">SISTEM ADMINISTRATOR</p>
+                <h1 class="text-[28px] font-black text-gray-900 leading-tight">
+                    Selamat datang, {{ auth()->user()->name }}
+                </h1>
+                <p class="text-sm font-medium text-gray-500 mt-1">Berikut ringkasan operasional sistem secara keseluruhan.</p>
             </div>
-            <div class="flex items-center justify-between">
+            
+            <div class="flex items-center gap-3 bg-white px-5 py-3 rounded-2xl border border-gray-100 shadow-sm flex-shrink-0">
+                <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                </div>
                 <div>
-                    <h1 class="text-[28px] font-black text-gray-900 leading-tight">
-                        Selamat datang, {{ auth()->user()->name }}
-                    </h1>
-                    <p class="text-sm font-medium text-gray-500 mt-1">Berikut ringkasan operasional sistem secara keseluruhan.</p>
+                    <p class="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Periode Kepengurusan</p>
+                    <p class="text-sm font-black text-gray-900 leading-none mt-1">{{ \App\Models\Periode::active()?->name ?? 'Belum Ada' }}</p>
                 </div>
             </div>
         </div>
@@ -29,20 +33,23 @@
     @else
         {{-- KADIV, WAKADIV & ANGGOTA DASHBOARD --}}
         {{-- Greeting Banner --}}
-        <div class="mb-8">
-            <div class="flex items-center gap-3 mb-2">
-                <p class="text-xs font-bold text-green-500 uppercase tracking-widest">DANA DAN USAHA</p>
-                <span class="w-1.5 h-1.5 rounded-full bg-gray-300"></span>
-                <p class="text-xs font-bold text-blue-600 uppercase tracking-widest">PERIODE {{ \App\Models\Periode::active()?->name ?? '-' }}</p>
+        <div class="mb-8 flex flex-col md:flex-row md:items-start justify-between gap-4">
+            <div>
+                <p class="text-xs font-bold text-green-500 uppercase tracking-widest mb-2">DANA DAN USAHA</p>
+                <h1 class="text-[28px] font-black text-gray-900 leading-tight">
+                    Selamat datang, {{ auth()->user()->name }}
+                </h1>
+                <p class="text-sm font-medium text-gray-500 mt-1">Berikut ringkasan divisi dan program kerja Anda.</p>
             </div>
-            <div class="flex items-center justify-between">
-                <div>
-                    <h1 class="text-[28px] font-black text-gray-900 leading-tight">
-                        Selamat datang, {{ auth()->user()->name }}
-                    </h1>
-                    <p class="text-sm font-medium text-gray-500 mt-1">Berikut ringkasan divisi dan program kerja Anda.</p>
+            
+            <div class="flex items-center gap-3 bg-white px-5 py-3 rounded-2xl border border-gray-100 shadow-sm flex-shrink-0">
+                <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-blue-600">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                 </div>
-                
+                <div>
+                    <p class="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Periode Kepengurusan</p>
+                    <p class="text-sm font-black text-gray-900 leading-none mt-1">{{ \App\Models\Periode::active()?->name ?? 'Belum Ada' }}</p>
+                </div>
             </div>
         </div>
 
