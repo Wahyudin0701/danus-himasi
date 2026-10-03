@@ -69,5 +69,14 @@
     .fc-daygrid-event { border-radius: 0.375rem; padding: 0.125rem 0.25rem; font-size: 0.75rem; font-weight: 600; cursor: pointer; transition: transform 0.15s ease; }
     .fc-daygrid-event:hover { transform: scale(1.02); opacity: 0.9; }
     .fc .fc-daygrid-day.fc-day-today { background-color: #eff6ff; }
+    
+    /* Mobile Responsive Adjustments */
+    @media (max-width: 640px) {
+        .fc .fc-toolbar { flex-direction: column; gap: 1rem; align-items: center !important; }
+        .fc .fc-toolbar-chunk { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem; }
+        .fc .fc-toolbar-title { font-size: 1.25rem !important; text-align: center; }
+        .fc .fc-button-group { flex-wrap: wrap; justify-content: center; }
+        .fc-daygrid-event { font-size: 0.65rem; padding: 0.1rem 0.2rem; }
+    }
 </style>
 @endpush
