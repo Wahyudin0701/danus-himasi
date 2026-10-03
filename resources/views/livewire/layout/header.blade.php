@@ -29,7 +29,7 @@ new class extends Component
                 } elseif (str_starts_with($routeName, 'bidang.')) {
                     echo 'Kelola Bidang';
                 } elseif (str_starts_with($routeName, 'kas.')) {
-                    echo 'Kas Danus';
+                    echo 'Kas Divisi';
                 } elseif (str_starts_with($routeName, 'dokumen.')) {
                     echo 'Dokumen Divisi';
                 } elseif ($routeName === 'dashboard') {
