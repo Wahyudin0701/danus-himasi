@@ -72,10 +72,18 @@
     
     /* Mobile Responsive Adjustments */
     @media (max-width: 640px) {
-        .fc .fc-toolbar { flex-direction: column; gap: 1rem; align-items: center !important; }
-        .fc .fc-toolbar-chunk { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.5rem; }
-        .fc .fc-toolbar-title { font-size: 1.25rem !important; text-align: center; }
-        .fc .fc-button-group { flex-wrap: wrap; justify-content: center; }
+        .fc .fc-toolbar { flex-direction: row !important; flex-wrap: wrap !important; gap: 0.5rem; justify-content: space-between !important; align-items: center !important; }
+        .fc .fc-toolbar-chunk { display: flex; align-items: center; justify-content: center; gap: 0.25rem; }
+        
+        /* 1: Title full width on top */
+        .fc .fc-toolbar-chunk:nth-child(2) { order: 1; width: 100%; margin-bottom: 0.25rem; }
+        /* 2: Nav buttons on left */
+        .fc .fc-toolbar-chunk:nth-child(1) { order: 2; }
+        /* 3: View buttons on right */
+        .fc .fc-toolbar-chunk:nth-child(3) { order: 3; }
+        
+        .fc .fc-toolbar-title { font-size: 1.125rem !important; text-align: center; }
+        .fc .fc-button { padding: 0.25rem 0.5rem !important; font-size: 0.75rem !important; }
         .fc-daygrid-event { font-size: 0.65rem; padding: 0.1rem 0.2rem; }
     }
 </style>
