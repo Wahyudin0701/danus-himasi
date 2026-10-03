@@ -7,7 +7,7 @@
             <p class="text-sm font-medium text-gray-500 mt-1">{{ in_array(auth()->user()->role, ['kadiv', 'wakadiv']) ? 'Kelola seluruh program kerja divisi Anda pada periode ini.' : 'Daftar program kerja divisi Anda pada periode ini.' }}</p>
         </div>
         {{-- Only Pimpinan Divisi and above can add projects. But let's say kadiv & wakadiv --}}
-        @if(in_array(auth()->user()->role, ['kadiv', 'wakadiv']))
+        @if(in_array(auth()->user()->role, ['admin', 'kadiv', 'wakadiv']))
         <a href="{{ route('projects.create') }}" wire:navigate
            class="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-600 text-white text-sm font-bold rounded-xl hover:bg-blue-700 transition-colors shadow-md shadow-blue-200">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -116,9 +116,9 @@
                         <td class="px-6 py-5">
                             <div class="flex items-center justify-center gap-2">
                                 <a href="{{ route('projects.show', $project->id) }}" wire:navigate class="px-3 py-1.5 bg-gray-100 text-gray-600 hover:bg-gray-200 rounded-lg text-xs font-bold transition-colors">Detail</a>
-                                @if(in_array(auth()->user()->role, ['kadiv', 'wakadiv']))
+                                @if(in_array(auth()->user()->role, ['admin', 'kadiv', 'wakadiv']))
                                 <a href="{{ route('projects.edit', $project->id) }}" wire:navigate class="px-3 py-1.5 bg-blue-50 text-blue-600 hover:bg-blue-100 rounded-lg text-xs font-bold transition-colors">Edit</a>
-                                <button class="px-3 py-1.5 bg-red-50 text-red-600 hover:bg-red-100 rounded-lg text-xs font-bold transition-colors">Batalkan</button>
+                                <button wire:click="deleteProject({{ \$project->id }})" wire:confirm="Yakin ingin membatalkan dan menghapus proker ini?" class="px-3 py-1.5 bg-red-50 text-red-600 hover:bg-red-100 rounded-lg text-xs font-bold transition-colors">Batalkan</button>
                                 @endif
                             </div>
                         </td>

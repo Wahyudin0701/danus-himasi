@@ -10,6 +10,16 @@ class Index extends Component
 {
     public string $filter = 'all';
 
+        public function deleteProject($id)
+    {
+        if (!in_array(auth()->user()->role, ['admin', 'kadiv', 'wakadiv'])) {
+            abort(403);
+        }
+        
+        $project = Project::findOrFail($id);
+        $project->delete();
+    }
+    
     public function render()
     {
         $userId = auth()->id();
