@@ -2,7 +2,7 @@
 use Illuminate\Support\Facades\Auth;
 ?>
 
-<aside class="w-64 bg-white border-r border-gray-100 flex flex-col h-screen fixed inset-y-0 left-0 z-50">
+<aside class="w-64 bg-white border-r border-gray-100 flex-col h-screen flex-shrink-0 hidden lg:flex" :class="sidebarOpen ? '!flex fixed inset-y-0 left-0 z-50' : ''">
     {{-- Logo / Header --}}
     <div class="h-20 flex items-center gap-3 px-6 border-b border-gray-100">
         <img src="{{ asset('Logo_Himasi_Store.jpg') }}" alt="Logo Himasi" class="w-11 h-11 rounded-full object-cover flex-shrink-0 shadow-md border border-gray-100">
