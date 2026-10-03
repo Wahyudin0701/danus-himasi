@@ -76,7 +76,7 @@
                                 $pj = $project->members->where('is_pic', true)->first();
                             @endphp
                             @if($pj)
-                                {{ explode(' ', $pj->user->name)[0] }}
+                                {{ $pj->user->name }}
                             @else
                                 <span class="text-gray-300">-</span>
                             @endif
