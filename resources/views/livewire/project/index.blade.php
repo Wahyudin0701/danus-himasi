@@ -118,7 +118,7 @@
                                 <a href="{{ route('projects.show', $project->id) }}" wire:navigate class="px-3 py-1.5 bg-gray-100 text-gray-600 hover:bg-gray-200 rounded-lg text-xs font-bold transition-colors">Detail</a>
                                 @if(in_array(auth()->user()->role, ['admin', 'kadiv', 'wakadiv']))
                                 <a href="{{ route('projects.edit', $project->id) }}" wire:navigate class="px-3 py-1.5 bg-blue-50 text-blue-600 hover:bg-blue-100 rounded-lg text-xs font-bold transition-colors">Edit</a>
-                                <button wire:click="deleteProject({{ \$project->id }})" wire:confirm="Yakin ingin membatalkan dan menghapus proker ini?" class="px-3 py-1.5 bg-red-50 text-red-600 hover:bg-red-100 rounded-lg text-xs font-bold transition-colors">Batalkan</button>
+                                <button wire:click="deleteProject({{ $project->id }})" wire:confirm="Yakin ingin membatalkan dan menghapus proker ini?" class="px-3 py-1.5 bg-red-50 text-red-600 hover:bg-red-100 rounded-lg text-xs font-bold transition-colors">Batalkan</button>
                                 @endif
                             </div>
                         </td>
