@@ -60,7 +60,7 @@ class Create extends Component
     public function render()
     {
         return view('livewire.project.create', [
-            'users' => User::whereNotIn('role', ['admin', 'kadiv', 'wakadiv'])->get()
+            'users' => User::where('role', '!=', 'admin')->get()
         ])->layout('layouts.app');
     }
 }
