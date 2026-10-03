@@ -55,22 +55,37 @@
                                 <div class="relative flex items-center gap-2 {{ $isMe ? 'flex-row-reverse' : 'flex-row' }}">
                                     
                                     {{-- The Bubble Content --}}
-                                    <div class="px-4 py-2.5 rounded-2xl text-sm font-medium shadow-sm {{ $isMe ? 'bg-blue-600 text-white rounded-tr-sm' : 'bg-white border border-gray-100 text-gray-800 rounded-tl-sm' }}" style="word-break: break-word;">
+                                    <div class="px-4 py-2.5 rounded-2xl text-sm font-medium shadow-sm {{ $message->trashed() ? 'bg-gray-100/80 text-gray-400 border border-gray-200' : ($isMe ? 'bg-blue-600 text-white rounded-tr-sm' : 'bg-white border border-gray-100 text-gray-800 rounded-tl-sm') }}" style="word-break: break-word;">
                                         @if($message->replyTo)
                                             <div class="mb-1 p-2 bg-black/5 rounded border-l-4 {{ $isMe ? 'border-blue-300' : 'border-gray-300' }} text-xs opacity-80" style="word-break: break-word;">
                                                 <span class="font-bold {{ $isMe ? 'text-blue-100' : 'text-gray-700' }} block mb-0.5">
                                                     {{ $message->replyTo->sender_id === auth()->id() ? 'Anda' : ($message->replyTo->sender->name ?? 'User') }}
                                                 </span>
                                                 <span class="{{ $isMe ? 'text-blue-50' : 'text-gray-600' }} line-clamp-2">
-                                                    {{ $message->replyTo->body }}
+                                                    @if($message->replyTo->trashed())
+                                                        <span class="italic opacity-80 flex items-center gap-1">
+                                                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
+                                                            Pesan ini telah dihapus
+                                                        </span>
+                                                    @else
+                                                        {{ $message->replyTo->body }}
+                                                    @endif
                                                 </span>
                                             </div>
                                         @endif
-                                        {{ $message->body }}
+                                        
+                                        @if($message->trashed())
+                                            <span class="italic flex items-center gap-1.5">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
+                                                Pesan ini telah dihapus
+                                            </span>
+                                        @else
+                                            {{ $message->body }}
+                                        @endif
                                     </div>
                                     
                                     {{-- Actions Menu (3 dots) --}}
-                                    @if(!$isEditing)
+                                    @if(!$isEditing && !$message->trashed())
                                         <div class="relative opacity-0 group-hover:opacity-100 transition-opacity" @click.outside="menuOpen = false">
                                             <button @click="menuOpen = !menuOpen" class="p-1 text-gray-400 hover:bg-gray-200 hover:text-gray-700 rounded-full transition-colors">
                                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"/></svg>
@@ -101,7 +116,7 @@
                             
                             <div class="flex items-center gap-1 mt-1 px-1">
                                 <span class="text-[10px] text-gray-400 font-medium">{{ $message->created_at->format('H:i') }}</span>
-                                @if($message->is_edited)
+                                @if($message->is_edited && !$message->trashed())
                                     <span class="text-[9px] text-gray-400 font-medium italic">(diedit)</span>
                                 @endif
                             </div>
@@ -127,7 +142,13 @@
             <div class="max-w-5xl mx-auto mb-2 relative bg-gray-50 border-l-4 border-blue-500 rounded-lg p-3 pr-10 shadow-sm flex items-start gap-3">
                 <div class="flex-1 min-w-0">
                     <p class="text-xs font-bold text-blue-600 mb-0.5">Membalas {{ $this->replyingToMessage->sender_id === auth()->id() ? 'Anda' : ($this->replyingToMessage->sender->name ?? 'User') }}</p>
-                    <p class="text-xs text-gray-500 truncate">{{ $this->replyingToMessage->body }}</p>
+                    <p class="text-xs text-gray-500 truncate">
+                        @if($this->replyingToMessage->trashed())
+                            Pesan ini telah dihapus
+                        @else
+                            {{ $this->replyingToMessage->body }}
+                        @endif
+                    </p>
                 </div>
                 <button wire:click="cancelReply" class="absolute right-2 top-2 p-1.5 text-gray-400 hover:text-gray-600 hover:bg-gray-200 rounded-full transition-colors">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>

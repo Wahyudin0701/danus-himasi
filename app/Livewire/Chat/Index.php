@@ -36,7 +36,7 @@ class Index extends Component
 
         public function getReplyingToMessageProperty()
     {
-        return $this->replyingToMessageId ? Message::with(['sender', 'replyTo.sender'])->find($this->replyingToMessageId) : null;
+        return $this->replyingToMessageId ? Message::withTrashed()->with(['sender', 'replyTo' => function($q) { $q->withTrashed()->with('sender'); }])->find($this->replyingToMessageId) : null;
     }
 
     public function startReply(int $messageId)
@@ -104,7 +104,7 @@ class Index extends Component
     public function render()
     {
         // Get all group messages
-        $messages = Message::with(['sender', 'replyTo.sender'])
+        $messages = Message::withTrashed()->with(['sender', 'replyTo' => function($q) { $q->withTrashed()->with('sender'); }])
             ->whereNull('receiver_id')
             ->orderBy('created_at', 'asc')
             ->get();
