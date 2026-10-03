@@ -16,6 +16,10 @@ Route::get('projects', \App\Livewire\Project\Index::class)
     ->middleware(['auth'])
     ->name('projects.index');
 
+Route::get('calendar', \App\Livewire\Calendar\Index::class)
+    ->middleware(['auth'])
+    ->name('calendar.index');
+
 Route::get('projects/create', \App\Livewire\Project\Create::class)
     ->middleware(['auth'])
     ->name('projects.create');

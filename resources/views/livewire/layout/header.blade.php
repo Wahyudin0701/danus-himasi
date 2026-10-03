@@ -51,6 +51,8 @@ new class extends Component
                     echo 'Profil Saya';
                 } elseif (str_starts_with($routeName, 'projects.')) {
                     echo 'Program Kerja';
+                } elseif (str_starts_with($routeName, 'calendar.')) {
+                    echo 'Kalender Divisi';
                 } else {
                     echo 'Aplikasi Danus';
                 }
