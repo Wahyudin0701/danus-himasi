@@ -5,11 +5,16 @@ namespace App\Livewire\Chat;
 use Livewire\Component;
 use App\Models\Message;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class Index extends Component
 {
     public string $messageInput = '';
     public int $pollInterval = 3000; // 3 seconds
+    
+    // Edit state
+    public ?int $editingMessageId = null;
+    public string $editMessageInput = '';
 
     public function sendMessage()
     {
@@ -24,14 +29,57 @@ class Index extends Component
         ]);
 
         $this->messageInput = '';
+    }
 
-        // Log activity
-        \App\Models\ActivityLog::create([
-            'user_id'     => Auth::id(),
-            'action'      => 'SEND_GROUP_MESSAGE',
-            'description' => Auth::user()->name . ' mengirim pesan di grup chat.',
-            'ip_address'  => request()->ip(),
-        ]);
+    public function startEdit(int $messageId)
+    {
+        $message = Message::find($messageId);
+        
+        // Ensure message exists, belongs to user, and is within 15 minutes
+        if ($message && $message->sender_id === Auth::id() && $message->created_at->diffInMinutes(now()) <= 15) {
+            $this->editingMessageId = $message->id;
+            $this->editMessageInput = $message->body;
+        } else {
+            $this->cancelEdit();
+            // Dispatch a browser event to show error if needed, but for now just cancel
+            $this->dispatch('chat-error', 'Waktu edit sudah habis (maks 15 menit) atau pesan tidak ditemukan.');
+        }
+    }
+
+    public function cancelEdit()
+    {
+        $this->editingMessageId = null;
+        $this->editMessageInput = '';
+    }
+
+    public function updateMessage()
+    {
+        if (trim($this->editMessageInput) === '' || !$this->editingMessageId) return;
+
+        $this->validate(['editMessageInput' => 'required|string|max:2000']);
+
+        $message = Message::find($this->editingMessageId);
+        
+        if ($message && $message->sender_id === Auth::id() && $message->created_at->diffInMinutes(now()) <= 15) {
+            $message->update([
+                'body' => $this->editMessageInput,
+                'is_edited' => true
+            ]);
+        }
+        
+        $this->cancelEdit();
+    }
+
+    public function deleteMessage(int $messageId)
+    {
+        $message = Message::find($messageId);
+        
+        // Ensure message exists, belongs to user, and is within 15 minutes
+        if ($message && $message->sender_id === Auth::id() && $message->created_at->diffInMinutes(now()) <= 15) {
+            $message->delete();
+        } else {
+            $this->dispatch('chat-error', 'Waktu hapus sudah habis (maks 15 menit) atau pesan tidak ditemukan.');
+        }
     }
 
     public function render()
