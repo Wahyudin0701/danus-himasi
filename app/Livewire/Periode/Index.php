@@ -98,6 +98,7 @@ class Index extends Component
         $periodes = Periode::orderByDesc('year_start')->get();
         $activePeriode = Periode::active();
 
-        return view('livewire.periode.index', compact('periodes', 'activePeriode'));
+        return view('livewire.periode.index', compact('periodes', 'activePeriode'))
+            ->layout('layouts.app');
     }
 }
