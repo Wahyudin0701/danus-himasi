@@ -173,50 +173,7 @@
         @endif
 
         {{-- Input & Mention Dropdown --}}
-        <div class="p-4" x-data="{
-            allUsers: @json($users->values()),
-            showMentions: false,
-            mentionQuery: '',
-            mentionStart: -1,
-
-            get filteredUsers() {
-                if (this.mentionQuery === '') return this.allUsers;
-                return this.allUsers.filter(u => u.name.toLowerCase().includes(this.mentionQuery.toLowerCase()));
-            },
-
-            handleInput(e) {
-                const ta = e.target;
-                const val = ta.value;
-                const pos = ta.selectionStart;
-                const textBefore = val.substring(0, pos);
-
-                // Find the last @ that is at start or after space/newline
-                const match = textBefore.match(/(^|[\s\n])@([^\s@]*)$/);
-                if (match) {
-                    this.mentionQuery = match[2];
-                    this.mentionStart = pos - match[2].length - 1; // position of @
-                    this.showMentions = true;
-                } else {
-                    this.showMentions = false;
-                    this.mentionQuery = '';
-                    this.mentionStart = -1;
-                }
-            },
-
-            selectUser(name) {
-                const ta = this.\$refs.input;
-                const val = ta.value;
-                const before = val.substring(0, this.mentionStart);
-                const after = val.substring(ta.selectionStart);
-                const newVal = before + '@' + name + ' ' + after;
-                ta.value = newVal;
-                ta.dispatchEvent(new Event('input'));
-                // Sync to Livewire
-                @this.set('messageInput', newVal);
-                this.showMentions = false;
-                this.\$nextTick(() => ta.focus());
-            }
-        }" @click.outside="showMentions = false" class="relative">
+        <div class="p-4 relative" x-data="chatMention" @click.outside="showMentions = false">
 
             {{-- Mention dropdown --}}
             <div x-show="showMentions && filteredUsers.length > 0"
@@ -263,9 +220,12 @@
     @endif
 
     <script>
+        // User list for @mention — injected safely from server
+        window._chatUsers = @json($users->values());
+
         document.addEventListener('alpine:init', () => {
-            Alpine.data('mentionHandler', () => ({
-                allUsers: @json($users->values()),
+            Alpine.data('chatMention', () => ({
+                allUsers: window._chatUsers,
                 showMentions: false,
                 mentionQuery: '',
                 mentionStart: -1,
@@ -280,12 +240,10 @@
                     const val = ta.value;
                     const pos = ta.selectionStart;
                     const textBefore = val.substring(0, pos);
-
-                    const match = textBefore.match(/(^|[\s
-])@([^\s@]*)$/);
+                    const match = textBefore.match(/(^|[\s\n])@([^\s@]*)$/);
                     if (match) {
                         this.mentionQuery = match[2];
-                        this.mentionStart = pos - match[2].length - 1; 
+                        this.mentionStart = pos - match[2].length - 1;
                         this.showMentions = true;
                     } else {
                         this.showMentions = false;
@@ -296,9 +254,8 @@
 
                 selectUser(name) {
                     const ta = this.$refs.input;
-                    const val = ta.value;
-                    const before = val.substring(0, this.mentionStart);
-                    const after = val.substring(ta.selectionStart);
+                    const before = ta.value.substring(0, this.mentionStart);
+                    const after = ta.value.substring(ta.selectionStart);
                     const newVal = before + '@' + name + ' ' + after;
                     ta.value = newVal;
                     ta.dispatchEvent(new Event('input'));
