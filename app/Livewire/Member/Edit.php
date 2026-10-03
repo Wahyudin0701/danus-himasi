@@ -73,7 +73,12 @@ class Edit extends Component
     {
         $this->validate([
             'name' => 'required|max:255',
-            'nim' => 'required|unique:users,nim,'.$this->member->id,
+            'nim' => [
+                'required',
+                \Illuminate\Validation\Rule::unique('users', 'nim')
+                    ->ignore($this->member->id)
+                    ->where('periode_id', $this->member->periode_id)
+            ],
             'angkatan' => 'required|max:10',
             'jabatan' => 'required',
             'password' => 'nullable|min:6',

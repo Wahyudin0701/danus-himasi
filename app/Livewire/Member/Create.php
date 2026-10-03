@@ -51,15 +51,15 @@ class Create extends Component
 
     public function save()
     {
+        $activePeriodeId = optional(Periode::active())->id;
+
         $this->validate([
             'name'     => 'required|max:255',
-            'nim'      => 'required|unique:users,nim',
+            'nim'      => ['required', \Illuminate\Validation\Rule::unique('users', 'nim')->where('periode_id', $activePeriodeId)],
             'angkatan' => 'required|max:10',
             'jabatan'  => 'required',
             'password' => 'required|min:6',
         ]);
-
-        $activePeriodeId = optional(Periode::active())->id;
 
         $singularRoles = ['Ketua Divisi', 'Wakil Ketua Divisi', 'Sekretaris Divisi', 'Bendahara Divisi'];
         $isSingular = in_array($this->jabatan, $singularRoles) || str_starts_with($this->jabatan, 'Ketua Bidang');
