@@ -5,9 +5,7 @@ use Illuminate\Support\Facades\Auth;
 <aside class="w-64 bg-white border-r border-gray-100 flex flex-col h-screen fixed inset-y-0 left-0 z-50">
     {{-- Logo / Header --}}
     <div class="h-20 flex items-center gap-3 px-6 border-b border-gray-100">
-        <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center shrink-0 border border-gray-100 shadow-sm overflow-hidden">
-            <img src="{{ asset('img/himasi.png') }}" alt="Logo HIMASI" class="w-8 h-8 object-contain">
-        </div>
+        <img src="{{ asset('Logo_Himasi_Store.jpg') }}" alt="Logo Himasi" class="w-11 h-11 rounded-full object-cover flex-shrink-0 shadow-md border border-gray-100">
         <div class="leading-tight">
             <h2 class="text-sm font-black text-gray-900 tracking-tight">DANUS HIMASI</h2>
             <p class="text-[10px] font-bold text-orange-600 tracking-wider">UNJA</p>
