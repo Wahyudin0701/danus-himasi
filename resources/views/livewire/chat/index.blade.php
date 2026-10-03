@@ -21,7 +21,28 @@
     {{-- Messages Area --}}
     <div class="flex-1 overflow-y-auto p-6 bg-gray-50/50" id="chat-messages" wire:poll.{{ $pollInterval }}ms style="scrollbar-width: none; -ms-overflow-style: none;">
         <div class="space-y-6">
+            @php $lastDate = null; @endphp
             @forelse($messages as $message)
+                @php
+                    $currentDate = $message->created_at->format('Y-m-d');
+                    $isNewDate = $lastDate !== $currentDate;
+                    $lastDate = $currentDate;
+                @endphp
+
+                @if($isNewDate)
+                    <div class="flex justify-center my-6">
+                        <span class="px-4 py-1.5 bg-gray-200/70 text-gray-600 text-[10px] font-bold uppercase tracking-widest rounded-full border border-gray-200 shadow-sm backdrop-blur-sm">
+                            @if($currentDate === now()->format('Y-m-d'))
+                                Hari Ini
+                            @elseif($currentDate === now()->subDay()->format('Y-m-d'))
+                                Kemarin
+                            @else
+                                {{ \Carbon\Carbon::parse($currentDate)->locale('id')->translatedFormat('d F Y') }}
+                            @endif
+                        </span>
+                    </div>
+                @endif
+
                 @php
                     $isMe = $message->sender_id === auth()->id();
                     $isEditing = $editingMessageId === $message->id;
