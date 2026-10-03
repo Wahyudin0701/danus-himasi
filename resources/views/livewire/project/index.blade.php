@@ -86,10 +86,10 @@
                         <td class="px-6 py-5 text-center">
                             <span class="text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider
                                 {{ $project->status === 'active' ? 'bg-green-100 text-green-700' : '' }}
-                                {{ $project->status === 'draft' ? 'bg-blue-50 text-blue-600' : '' }}
+                                {{ $project->status === 'planning' ? 'bg-blue-50 text-blue-600' : '' }}
                                 {{ $project->status === 'completed' ? 'bg-indigo-100 text-indigo-700' : '' }}
                                 {{ $project->status === 'archived' ? 'bg-gray-100 text-gray-600' : '' }}">
-                                {{ $project->status === 'draft' ? 'PLANNING' : $project->status }}
+                                {{ $project->status === 'planning' ? 'PLANNING' : $project->status }}
                             </span>
                         </td>
                         

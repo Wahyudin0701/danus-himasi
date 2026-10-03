@@ -31,7 +31,7 @@
         $badgeClass = 'bg-gray-100 text-gray-600';
         $statusLabel = 'DRAFT';
         
-        if ($project->status === 'draft') {
+        if ($project->status === 'planning') {
             $barColor = 'bg-blue-500';
             $badgeClass = 'bg-blue-50 text-blue-700 border-blue-100';
             $statusLabel = 'PLANNING';
