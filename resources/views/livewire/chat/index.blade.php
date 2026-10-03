@@ -174,7 +174,7 @@
 
         {{-- Input & Mention Dropdown --}}
         <div class="p-4" x-data="{
-            allUsers: {{ json_encode($users->values()) }},
+            allUsers: @json($users->values()),
             showMentions: false,
             mentionQuery: '',
             mentionStart: -1,
