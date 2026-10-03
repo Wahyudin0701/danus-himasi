@@ -38,8 +38,19 @@ class Dashboard extends Component
                        ->orderByRaw("FIELD(role, 'kadiv', 'wakadiv', 'sekretaris', 'bendahara', 'anggota')")
                        ->get();
 
+        $activityLogs = [];
+        $semuaPeriode = [];
+        
+        if (auth()->user()->role === 'admin') {
+            $activityLogs = \App\Models\ActivityLog::with('user')->latest()->take(10)->get();
+            $semuaPeriode = Periode::withCount(['users' => function($q) {
+                $q->where('role', '!=', 'admin');
+            }, 'projects'])->orderBy('year_start', 'desc')->get();
+        }
+
         return view('livewire.dashboard', compact(
-            'totalAnggota', 'totalProker', 'prokerAktif', 'recentProjects', 'anggota', 'totalModal', 'totalPendapatan', 'totalKeuntungan'
+            'totalAnggota', 'totalProker', 'prokerAktif', 'recentProjects', 'anggota', 'totalModal', 'totalPendapatan', 'totalKeuntungan',
+            'activityLogs', 'semuaPeriode'
         ))->layout('layouts.app');
     }
 }

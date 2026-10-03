@@ -22,12 +22,93 @@
             </div>
         </div>
 
-        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 text-center text-gray-500 h-64 flex flex-col items-center justify-center">
-            <svg class="w-12 h-12 text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-            </svg>
-            <p class="font-bold">Log Aktivitas Sistem</p>
-            <p class="text-sm mt-1">Sistem pencatatan log aktivitas belum diimplementasikan.</p>
+        {{-- Statistik Periode Aktif --}}
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            {{-- Card Anggota --}}
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex items-center justify-between">
+                <div>
+                    <p class="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">Total Anggota (Non-Admin)</p>
+                    <p class="text-3xl font-black text-gray-900">{{ $totalAnggota }}</p>
+                </div>
+                <div class="w-12 h-12 rounded-full bg-blue-50 text-blue-500 flex items-center justify-center">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                </div>
+            </div>
+            {{-- Card Proker --}}
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex items-center justify-between">
+                <div>
+                    <p class="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">Total Program Kerja</p>
+                    <p class="text-3xl font-black text-gray-900">{{ $totalProker }}</p>
+                </div>
+                <div class="w-12 h-12 rounded-full bg-green-50 text-green-500 flex items-center justify-center">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
+                </div>
+            </div>
+            {{-- Card Keuangan --}}
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex items-center justify-between">
+                <div>
+                    <p class="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">Total Keuntungan</p>
+                    <p class="text-2xl font-black text-gray-900">Rp{{ number_format($totalKeuntungan, 0, ',', '.') }}</p>
+                </div>
+                <div class="w-12 h-12 rounded-full bg-yellow-50 text-yellow-500 flex items-center justify-center">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {{-- Log Aktivitas --}}
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                <div class="px-6 py-5 border-b border-gray-100 bg-gray-50/50">
+                    <h2 class="font-bold text-gray-900">10 Log Aktivitas Terbaru</h2>
+                </div>
+                <div class="divide-y divide-gray-100">
+                    @forelse($activityLogs as $log)
+                    <div class="p-4 hover:bg-gray-50 transition-colors flex gap-4">
+                        <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center flex-shrink-0 font-bold text-xs">
+                            {{ strtoupper(substr($log->user->name ?? '?', 0, 1)) }}
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-gray-900">{{ $log->description }}</p>
+                            <p class="text-xs text-gray-400 mt-1">{{ $log->created_at->diffForHumans() }} &bull; {{ $log->ip_address }}</p>
+                        </div>
+                    </div>
+                    @empty
+                    <div class="p-8 text-center text-gray-400 text-sm font-medium">Belum ada log aktivitas.</div>
+                    @endforelse
+                </div>
+            </div>
+
+            {{-- Semua Periode --}}
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden h-fit">
+                <div class="px-6 py-5 border-b border-gray-100 bg-gray-50/50 flex justify-between items-center">
+                    <h2 class="font-bold text-gray-900">Manajemen Periode</h2>
+                    <a href="{{ route('periode.index') }}" wire:navigate class="text-xs font-bold text-blue-600 hover:text-blue-700">Lihat Semua</a>
+                </div>
+                <div class="divide-y divide-gray-100">
+                    @forelse($semuaPeriode as $periode)
+                    <div class="p-5 flex items-center justify-between {{ $periode->is_active ? 'bg-blue-50/30' : 'hover:bg-gray-50' }} transition-colors">
+                        <div>
+                            <div class="flex items-center gap-2">
+                                <p class="font-bold text-gray-900">{{ $periode->name }}</p>
+                                @if($periode->is_active)
+                                <span class="bg-blue-100 text-blue-700 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Aktif</span>
+                                @endif
+                            </div>
+                            <div class="flex items-center gap-4 mt-2">
+                                <p class="text-xs font-medium text-gray-500"><span class="font-bold text-gray-700">{{ $periode->users_count }}</span> Anggota</p>
+                                <p class="text-xs font-medium text-gray-500"><span class="font-bold text-gray-700">{{ $periode->projects_count }}</span> Proker</p>
+                            </div>
+                        </div>
+                        <a href="{{ route('periode.index') }}" wire:navigate class="w-8 h-8 rounded-full bg-gray-50 text-gray-400 hover:bg-blue-50 hover:text-blue-600 flex items-center justify-center transition-colors">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                        </a>
+                    </div>
+                    @empty
+                    <div class="p-8 text-center text-gray-400 text-sm font-medium">Belum ada periode.</div>
+                    @endforelse
+                </div>
+            </div>
         </div>
 
     @else
