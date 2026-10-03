@@ -18,6 +18,7 @@
         @endif
     </div>
 
+    @if(auth()->user()->role !== 'admin')
     {{-- Filter Tabs --}}
     <div class="flex items-center gap-2 mb-5">
         <button wire:click="$set('filter', 'all')" wire:loading.attr="disabled" wire:target="filter"
@@ -29,6 +30,7 @@
             Proker Saya
         </button>
     </div>
+    @endif
 
     {{-- Table Container --}}
     <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden relative" wire:loading.class="opacity-50 pointer-events-none transition-opacity duration-200">
