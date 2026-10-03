@@ -64,6 +64,8 @@
     .fc .fc-button-primary { background-color: #2563eb; border-color: #2563eb; font-weight: 700; text-transform: capitalize; border-radius: 0.5rem; }
     .fc .fc-button-primary:not(:disabled):active, .fc .fc-button-primary:not(:disabled).fc-button-active { background-color: #1d4ed8; border-color: #1d4ed8; }
     .fc .fc-button-primary:hover { background-color: #1d4ed8; }
+    .fc .fc-button-primary:focus { box-shadow: none !important; outline: none !important; }
+    .fc .fc-button:focus { box-shadow: none !important; outline: none !important; }
     .fc-daygrid-event { border-radius: 0.375rem; padding: 0.125rem 0.25rem; font-size: 0.75rem; font-weight: 600; cursor: pointer; transition: transform 0.15s ease; }
     .fc-daygrid-event:hover { transform: scale(1.02); opacity: 0.9; }
     .fc .fc-daygrid-day.fc-day-today { background-color: #eff6ff; }
