@@ -12,6 +12,15 @@ class Logout
      */
     public function __invoke(): void
     {
+        if (Auth::check()) {
+            \App\Models\ActivityLog::create([
+                'user_id' => Auth::id(),
+                'action' => 'LOGOUT',
+                'description' => Auth::user()->name . ' keluar (logout) dari sistem.',
+                'ip_address' => request()->ip()
+            ]);
+        }
+        
         Auth::guard('web')->logout();
 
         Session::invalidate();

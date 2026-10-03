@@ -34,6 +34,13 @@ class LoginForm extends Form
         }
 
         RateLimiter::clear($this->throttleKey());
+
+        \App\Models\ActivityLog::create([
+            'user_id' => Auth::id(),
+            'action' => 'LOGIN',
+            'description' => Auth::user()->name . ' berhasil masuk (login) ke sistem.',
+            'ip_address' => request()->ip()
+        ]);
     }
 
     protected function ensureIsNotRateLimited(): void

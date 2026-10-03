@@ -30,6 +30,8 @@ new class extends Component
                     echo 'Kelola Bidang';
                 } elseif (str_starts_with($routeName, 'kas.')) {
                     echo 'Kas Divisi';
+                } elseif (str_starts_with($routeName, 'system.')) {
+                    echo 'Log Aktivitas Sistem';
                 } elseif (str_starts_with($routeName, 'dokumen.')) {
                     echo 'Dokumen Divisi';
                 } elseif ($routeName === 'dashboard') {

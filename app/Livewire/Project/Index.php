@@ -17,7 +17,15 @@ class Index extends Component
         }
         
         $project = Project::findOrFail($id);
+        $projectName = $project->name;
         $project->delete();
+        
+        \App\Models\ActivityLog::create([
+            'user_id' => auth()->id(),
+            'action' => 'DELETE_PROJECT',
+            'description' => auth()->user()->name . ' membatalkan dan menghapus program kerja: ' . $projectName,
+            'ip_address' => request()->ip()
+        ]);
     }
     
     public function render()
