@@ -173,7 +173,7 @@
         @endif
 
         {{-- Input & Mention Dropdown --}}
-        <div class="p-4 relative" x-data="chatMention" @click.outside="showMentions = false">
+        <div class="p-4 relative" x-data="chatMention" x-on:click.outside="showMentions = false">
 
             {{-- Mention dropdown --}}
             <div x-show="showMentions && filteredUsers.length > 0"
@@ -205,8 +205,8 @@
                     <textarea
                         x-ref="input"
                         wire:model="messageInput"
-                        @input="handleInput($event)"
-                        @keydown="handleKeydown($event)"
+                        x-on:input="handleInput($event)"
+                        x-on:keydown="handleKeydown($event)"
                         rows="1"
                         placeholder="Ketik pesan... gunakan @ untuk tag anggota"
                         class="w-full bg-transparent border-0 px-4 py-3 text-sm font-medium focus:ring-0 resize-none max-h-32 rounded-2xl"
@@ -245,6 +245,9 @@
                     const textBefore = val.substring(0, pos);
                     const match = textBefore.match(/(^|[\s\n])@([^\s@]*)$/);
                     if (match) {
+                        if (!this.showMentions || this.mentionQuery !== match[2]) {
+                            this.selectedIndex = 0;
+                        }
                         this.mentionQuery = match[2];
                         this.mentionStart = pos - match[2].length - 1;
                         this.showMentions = true;
@@ -252,6 +255,33 @@
                         this.showMentions = false;
                         this.mentionQuery = '';
                         this.mentionStart = -1;
+                    }
+                },
+
+                handleKeydown(e) {
+                    if (!this.showMentions || this.filteredUsers.length === 0) {
+                        // Mention menu not open — Enter sends message
+                        if (e.key === 'Enter' && !e.shiftKey) {
+                            e.preventDefault();
+                            this.$wire.sendMessage();
+                        }
+                        return;
+                    }
+
+                    // Mention menu IS open — intercept keys
+                    if (e.key === 'ArrowDown') {
+                        e.preventDefault();
+                        this.selectedIndex = (this.selectedIndex + 1) % this.filteredUsers.length;
+                    } else if (e.key === 'ArrowUp') {
+                        e.preventDefault();
+                        this.selectedIndex = (this.selectedIndex - 1 + this.filteredUsers.length) % this.filteredUsers.length;
+                    } else if (e.key === 'Enter') {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        this.selectUser(this.filteredUsers[this.selectedIndex].name);
+                    } else if (e.key === 'Escape') {
+                        e.preventDefault();
+                        this.showMentions = false;
                     }
                 },
 
