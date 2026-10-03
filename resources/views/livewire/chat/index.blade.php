@@ -33,9 +33,9 @@
 
                         {{-- Bubble --}}
                         <div class="flex flex-col {{ $isMe ? 'items-end' : 'items-start' }}">
-                            @if(!$isMe)
-                                <span class="text-[11px] font-bold text-gray-600 mb-1 ml-1">{{ $message->sender->name ?? 'User' }}</span>
-                            @endif
+                            <span class="text-[11px] font-bold text-gray-600 mb-1 {{ $isMe ? 'mr-1' : 'ml-1' }}">
+                                {{ $isMe ? 'Anda' : ($message->sender->name ?? 'User') }}
+                            </span>
                             
                             <div class="px-4 py-2.5 rounded-2xl text-sm font-medium shadow-sm {{ $isMe ? 'bg-blue-600 text-white rounded-tr-sm' : 'bg-white border border-gray-100 text-gray-800 rounded-tl-sm' }}">
                                 {{ $message->body }}
