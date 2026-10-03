@@ -33,7 +33,7 @@ new class extends Component
 
         $validated = $this->validate([
             'name' => ['required', 'string', 'max:255'],
-            'photo' => ['nullable', 'image', 'max:2048'], // 2MB Max
+            'photo' => ['nullable', 'image', 'max:10240'], // 10MB Max
         ]);
 
         $user->fill($validated);
@@ -85,7 +85,7 @@ new class extends Component
             </div>
             <div>
                 <label class="block text-sm font-bold text-gray-900 mb-1">Foto Profil</label>
-                <p class="text-xs text-gray-500 mb-3">Format JPG, PNG, atau GIF. Maksimal 2MB.</p>
+                <p class="text-xs text-gray-500 mb-3">Format JPG, PNG, atau GIF. Maksimal 10MB.</p>
                 <div class="relative">
                     <input type="file" wire:model="photo" id="photo" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
                     <button type="button" class="px-4 py-2 bg-white border border-gray-200 text-gray-700 text-xs font-bold rounded-xl hover:bg-gray-50 transition-colors shadow-sm focus:outline-none">
