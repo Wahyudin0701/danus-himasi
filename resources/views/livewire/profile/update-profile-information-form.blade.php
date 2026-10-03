@@ -9,8 +9,6 @@ new class extends Component
 {
     public string $name = '';
     public string $angkatan = '';
-    public string $jabatan = '';
-
     /**
      * Mount the component.
      */
@@ -19,7 +17,6 @@ new class extends Component
         $user = Auth::user();
         $this->name = $user->name;
         $this->angkatan = $user->angkatan ?? '';
-        $this->jabatan = $user->jabatan ?? '';
     }
 
     /**
@@ -32,7 +29,6 @@ new class extends Component
         $validated = $this->validate([
             'name' => ['required', 'string', 'max:255'],
             'angkatan' => ['nullable', 'string', 'max:10'],
-            'jabatan' => ['nullable', 'string', 'max:255'],
         ]);
 
         $user->fill($validated);
@@ -70,8 +66,8 @@ new class extends Component
         {{-- Role & Bidang (Readonly) --}}
         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
             <div>
-                <label class="block text-xs font-bold text-gray-500 mb-1">Peran / Posisi</label>
-                <input type="text" value="{{ strtoupper(auth()->user()->role) }}" disabled class="w-full px-4 py-2.5 bg-gray-100 border border-gray-200 text-gray-500 text-sm font-bold rounded-xl cursor-not-allowed">
+                <label class="block text-xs font-bold text-gray-500 mb-1">Jabatan</label>
+                <input type="text" value="{{ auth()->user()->jabatan ?? '-' }}" disabled class="w-full px-4 py-2.5 bg-gray-100 border border-gray-200 text-gray-500 text-sm font-bold rounded-xl cursor-not-allowed">
             </div>
             <div>
                 <label class="block text-xs font-bold text-gray-500 mb-1">Divisi / Bidang</label>
@@ -86,17 +82,10 @@ new class extends Component
             <x-input-error class="mt-2" :messages="$errors->get('name')" />
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-            <div>
-                <label for="angkatan" class="block text-xs font-bold text-gray-700 mb-1">Tahun Angkatan</label>
-                <input wire:model="angkatan" id="angkatan" type="text" placeholder="Contoh: 2022" class="w-full px-4 py-2.5 bg-white border border-gray-300 text-sm font-medium rounded-xl focus:ring-blue-500 focus:border-blue-500 transition-colors shadow-sm">
-                <x-input-error class="mt-2" :messages="$errors->get('angkatan')" />
-            </div>
-            <div>
-                <label for="jabatan" class="block text-xs font-bold text-gray-700 mb-1">Jabatan Spesifik</label>
-                <input wire:model="jabatan" id="jabatan" type="text" placeholder="Contoh: Anggota Divisi" class="w-full px-4 py-2.5 bg-white border border-gray-300 text-sm font-medium rounded-xl focus:ring-blue-500 focus:border-blue-500 transition-colors shadow-sm">
-                <x-input-error class="mt-2" :messages="$errors->get('jabatan')" />
-            </div>
+        <div>
+            <label for="angkatan" class="block text-xs font-bold text-gray-700 mb-1">Tahun Angkatan</label>
+            <input wire:model="angkatan" id="angkatan" type="text" placeholder="Contoh: 2022" class="w-full md:w-1/2 px-4 py-2.5 bg-white border border-gray-300 text-sm font-medium rounded-xl focus:ring-blue-500 focus:border-blue-500 transition-colors shadow-sm">
+            <x-input-error class="mt-2" :messages="$errors->get('angkatan')" />
         </div>
 
         <div class="flex items-center gap-4 pt-2">
