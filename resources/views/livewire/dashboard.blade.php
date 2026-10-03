@@ -22,36 +22,114 @@
             </div>
         </div>
 
-        {{-- Statistik Periode Aktif --}}
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            {{-- Card Anggota --}}
-            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex items-center justify-between">
-                <div>
-                    <p class="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">Total Anggota (Non-Admin)</p>
-                    <p class="text-3xl font-black text-gray-900">{{ $totalAnggota }}</p>
+        {{-- Stats Cards --}}
+        <div x-data="{ showFinanceModal: false }" class="mb-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {{-- Card Anggota --}}
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-4xl font-black text-gray-900 mb-1 mt-2">{{ $totalAnggota }}</p>
+                            <p class="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Total Anggota</p>
+                        </div>
+                        <div class="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center flex-shrink-0">
+                            <svg class="w-5 h-5 text-blue-500" fill="currentColor" viewBox="0 0 20 20"><path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"/></svg>
+                        </div>
+                    </div>
                 </div>
-                <div class="w-12 h-12 rounded-full bg-blue-50 text-blue-500 flex items-center justify-center">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+
+                {{-- Card Proker --}}
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-4xl font-black text-gray-900 mb-1 mt-2">{{ $totalProker }}</p>
+                            <p class="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Total Proker</p>
+                        </div>
+                        <div class="w-10 h-10 rounded-xl bg-purple-50 flex items-center justify-center flex-shrink-0">
+                            <svg class="w-5 h-5 text-purple-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M6 6V5a3 3 0 013-3h2a3 3 0 013 3v1h2a2 2 0 012 2v3.57A22.952 22.952 0 0110 13a22.95 22.95 0 01-8-1.43V8a2 2 0 012-2h2zm2-1a1 1 0 011-1h2a1 1 0 011 1v1H8V5zm1 5a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1z" clip-rule="evenodd" /><path d="M2 13.692V16a2 2 0 002 2h12a2 2 0 002-2v-2.308A24.974 24.974 0 0110 15c-2.796 0-5.487-.46-8-1.308z" /></svg>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Card Keuntungan (Clickable) --}}
+                <div @click="showFinanceModal = true" class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 cursor-pointer hover:shadow-md hover:border-emerald-200 transition-all duration-200 group">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <p class="text-2xl font-black {{ $totalKeuntungan >= 0 ? 'text-emerald-600' : 'text-red-600' }} mb-1 mt-2">
+                                {{ $totalKeuntungan < 0 ? '-' : '' }}Rp{{ number_format(abs($totalKeuntungan), 0, ',', '.') }}
+                            </p>
+                            <p class="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Keuntungan</p>
+                            <p class="text-[10px] text-gray-400 mt-1.5 flex items-center gap-1 group-hover:text-emerald-500 transition-colors">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                Klik untuk rincian
+                            </p>
+                        </div>
+                        <div class="w-10 h-10 rounded-xl {{ $totalKeuntungan >= 0 ? 'bg-emerald-50' : 'bg-red-50' }} flex items-center justify-center flex-shrink-0">
+                            @if($totalKeuntungan >= 0)
+                                <svg class="w-5 h-5 text-emerald-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z" clip-rule="evenodd" /></svg>
+                            @else
+                                <svg class="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M12 13a1 1 0 100 2h5a1 1 0 001-1V9a1 1 0 10-2 0v2.586l-4.293-4.293a1 1 0 00-1.414 0L8 9.586 3.707 5.293a1 1 0 00-1.414 1.414l5 5a1 1 0 001.414 0L11 9.414 14.586 13H12z" clip-rule="evenodd" /></svg>
+                            @endif
+                        </div>
+                    </div>
                 </div>
             </div>
-            {{-- Card Proker --}}
-            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex items-center justify-between">
-                <div>
-                    <p class="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">Total Program Kerja</p>
-                    <p class="text-3xl font-black text-gray-900">{{ $totalProker }}</p>
-                </div>
-                <div class="w-12 h-12 rounded-full bg-green-50 text-green-500 flex items-center justify-center">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
-                </div>
-            </div>
-            {{-- Card Keuangan --}}
-            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex items-center justify-between">
-                <div>
-                    <p class="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">Total Keuntungan</p>
-                    <p class="text-2xl font-black text-gray-900">Rp{{ number_format($totalKeuntungan, 0, ',', '.') }}</p>
-                </div>
-                <div class="w-12 h-12 rounded-full bg-yellow-50 text-yellow-500 flex items-center justify-center">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+
+            {{-- Finance Detail Floating Modal --}}
+            <div x-cloak x-show="showFinanceModal" class="fixed inset-0 z-50 flex items-center justify-center p-4">
+                <div class="absolute inset-0 bg-gray-900/50 backdrop-blur-sm" x-show="showFinanceModal" x-transition.opacity @click="showFinanceModal = false"></div>
+                <div class="bg-white rounded-3xl shadow-2xl w-full max-w-sm relative z-10 overflow-hidden"
+                     x-show="showFinanceModal"
+                     x-transition:enter="transition ease-out duration-300"
+                     x-transition:enter-start="opacity-0 translate-y-8 scale-95"
+                     x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+                     x-transition:leave="transition ease-in duration-200"
+                     x-transition:leave-start="opacity-100 translate-y-0 scale-100"
+                     x-transition:leave-end="opacity-0 translate-y-8 scale-95">
+                    {{-- Header --}}
+                    <div class="bg-gradient-to-br from-emerald-500 to-teal-600 p-6 pb-8">
+                        <div class="flex justify-between items-start mb-4">
+                            <p class="text-xs font-bold text-emerald-100 uppercase tracking-widest">Rincian Keuangan Divisi</p>
+                            <button @click="showFinanceModal = false" class="w-7 h-7 rounded-full bg-white/20 text-white hover:bg-white/30 flex items-center justify-center transition-colors">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                            </button>
+                        </div>
+                        <p class="text-4xl font-black text-white">{{ $totalKeuntungan < 0 ? '-' : '' }}Rp{{ number_format(abs($totalKeuntungan), 0, ',', '.') }}</p>
+                        <p class="text-sm font-bold text-emerald-100 mt-1">Total Keuntungan Divisi</p>
+                    </div>
+                    {{-- Breakdown --}}
+                    <div class="p-6 space-y-4">
+                        <div class="flex items-center justify-between p-4 bg-orange-50 rounded-2xl border border-orange-100">
+                            <div class="flex items-center gap-3">
+                                <div class="w-9 h-9 rounded-xl bg-white flex items-center justify-center shadow-sm">
+                                    <svg class="w-4 h-4 text-orange-500" fill="currentColor" viewBox="0 0 20 20"><path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z"/><path fill-rule="evenodd" d="M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 011-1h1a1 1 0 110 2H5a1 1 0 01-1-1zm5-1a1 1 0 100 2h1a1 1 0 100-2H9z" clip-rule="evenodd"/></svg>
+                                </div>
+                                <div>
+                                    <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Total Modal</p>
+                                    <p class="text-sm font-black text-gray-900">Rp{{ number_format($totalModal, 0, ',', '.') }}</p>
+                                </div>
+                            </div>
+                            <span class="text-xs font-bold text-orange-600 bg-orange-100 px-2.5 py-1 rounded-lg">Keluar</span>
+                        </div>
+                        <div class="flex items-center justify-between p-4 bg-green-50 rounded-2xl border border-green-100">
+                            <div class="flex items-center gap-3">
+                                <div class="w-9 h-9 rounded-xl bg-white flex items-center justify-center shadow-sm">
+                                    <svg class="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 4a2 2 0 00-2 2v4a2 2 0 002 2V6h10a2 2 0 00-2-2H4zm2 6a2 2 0 012-2h8a2 2 0 012 2v4a2 2 0 01-2 2H8a2 2 0 01-2-2v-4zm6 4a2 2 0 100-4 2 2 0 000 4z" clip-rule="evenodd"/></svg>
+                                </div>
+                                <div>
+                                    <p class="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Total Pendapatan</p>
+                                    <p class="text-sm font-black text-gray-900">Rp{{ number_format($totalPendapatan, 0, ',', '.') }}</p>
+                                </div>
+                            </div>
+                            <span class="text-xs font-bold text-green-600 bg-green-100 px-2.5 py-1 rounded-lg">Masuk</span>
+                        </div>
+                        <div class="border-t border-gray-100 pt-4 flex items-center justify-between">
+                            <p class="text-sm font-bold text-gray-600">Keuntungan Bersih</p>
+                            <p class="text-lg font-black {{ $totalKeuntungan >= 0 ? 'text-emerald-600' : 'text-red-600' }}">
+                                {{ $totalKeuntungan < 0 ? '-' : '+' }}Rp{{ number_format(abs($totalKeuntungan), 0, ',', '.') }}
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
