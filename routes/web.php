@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 use Illuminate\Support\Facades\Route;
 
@@ -57,6 +57,8 @@ Route::get('dokumen', \App\Livewire\Dokumen\Index::class)->middleware(['auth'])-
 Route::get('system-logs', \App\Livewire\SystemLog\Index::class)->middleware(['auth'])->name('system.logs');
 Route::get('periode', \App\Livewire\Periode\Index::class)->middleware(['auth'])->name('periode.index');
 Route::get('chat', \App\Livewire\Chat\Index::class)->middleware(['auth'])->name('chat.index');
+
+Route::get('inactive-periode', \App\Livewire\InactivePeriode::class)->middleware(['auth'])->name('inactive.periode');
 
 require __DIR__.'/auth.php';
 
