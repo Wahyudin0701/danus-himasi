@@ -187,10 +187,11 @@
                     <span class="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Tag Anggota</span>
                 </div>
                 
-                <template x-for="user in filteredUsers" :key="user.id">
+                <template x-for="(user, index) in filteredUsers" :key="user.id">
                     <button type="button"
                         @click="selectUser(user.name)"
                         @mousedown.prevent
+                        :class="{'bg-blue-50': index === selectedIndex}"
                         class="w-full text-left px-4 py-2.5 hover:bg-blue-50 flex items-center gap-3 transition-colors border-b border-gray-50 last:border-0">
                         <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-xs font-bold text-blue-600 border border-blue-200 flex-shrink-0" x-text="user.name.charAt(0)"></div>
                         <span class="text-sm font-bold text-gray-800" x-text="user.name"></span>
@@ -204,11 +205,11 @@
                         x-ref="input"
                         wire:model="messageInput"
                         @input="handleInput($event)"
+                        @keydown="handleKeydown($event)"
                         rows="1"
                         placeholder="Ketik pesan... gunakan @ untuk tag anggota"
                         class="w-full bg-transparent border-0 px-4 py-3 text-sm font-medium focus:ring-0 resize-none max-h-32 rounded-2xl"
                         oninput="this.style.height = ''; this.style.height = Math.min(this.scrollHeight, 120) + 'px'"
-                        wire:keydown.enter.prevent="sendMessage"
                     ></textarea>
                 </div>
                 <button type="submit" class="w-12 h-12 bg-blue-600 text-white rounded-xl flex items-center justify-center flex-shrink-0 hover:bg-blue-700 active:scale-95 transition-all shadow-sm shadow-blue-200">
