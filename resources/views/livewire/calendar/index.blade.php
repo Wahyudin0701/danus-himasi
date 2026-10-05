@@ -76,49 +76,55 @@
     <div class="bg-white rounded-3xl p-4 md:p-6 shadow-sm border border-gray-100" wire:ignore>
         <div id="calendar" class="min-h-[600px]"></div>
     </div>
-</div>
-
-@push('scripts')
-<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js" data-navigate-once></script>
 <script>
-    document.addEventListener('livewire:navigated', function () {
-        var calendarEl = document.getElementById('calendar');
-        if (calendarEl) {
-            var calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'dayGridMonth',
-                locale: 'id',
-                headerToolbar: {
-                    left: 'prev,next today',
-                    center: 'title',
-                    right: 'dayGridMonth,listMonth'
-                },
-                buttonText: {
-                    today: 'Hari Ini',
-                    month: 'Bulan',
-                    
-                    list: 'Agenda'
-                },
-                events: @json($events),
-                displayEventTime: false,
-                eventClick: function(info) {
-                    if (info.event.url) {
-                        info.jsEvent.preventDefault();
-                        // Navigate using Livewire if possible, or standard link
-                        Livewire.navigate(info.event.url);
-                    }
-                },
-                height: 'auto',
-                themeSystem: 'standard'
-            });
-            calendar.render();
+    (function() {
+        function initCalendar() {
+            if (typeof FullCalendar === 'undefined') {
+                setTimeout(initCalendar, 50);
+                return;
+            }
+            
+            var calendarEl = document.getElementById('calendar');
+            if (calendarEl) {
+                var calendar = new FullCalendar.Calendar(calendarEl, {
+                    initialView: 'dayGridMonth',
+                    locale: 'id',
+                    headerToolbar: {
+                        left: 'prev,next today',
+                        center: 'title',
+                        right: 'dayGridMonth,listMonth'
+                    },
+                    buttonText: {
+                        today: 'Hari Ini',
+                        month: 'Bulan',
+                        list: 'Agenda'
+                    },
+                    events: @json($events),
+                    displayEventTime: false,
+                    eventClick: function(info) {
+                        if (info.event.url) {
+                            info.jsEvent.preventDefault();
+                            Livewire.navigate(info.event.url);
+                        }
+                    },
+                    height: 'auto',
+                    themeSystem: 'standard'
+                });
+                calendar.render();
+                window.fullCalendarInstance = calendar;
+            }
+        }
+        
+        // Execute immediately upon injection
+        initCalendar();
 
-            // Store global calendar reference to use in our Alpine event
-            window.fullCalendarInstance = calendar;
-
-            // Make Title Clickable
+        // Register global events only once
+        if (!window.calendarEventsRegistered) {
             document.addEventListener('click', function(e) {
-                if (e.target.classList.contains('fc-toolbar-title')) {
-                    var currentDate = calendar.getDate();
+                if (e.target.classList.contains('fc-toolbar-title') && window.fullCalendarInstance) {
+                    var currentDate = window.fullCalendarInstance.getDate();
                     window.dispatchEvent(new CustomEvent('open-calendar-picker', { 
                         detail: { 
                             month: currentDate.getMonth() + 1, 
@@ -128,12 +134,14 @@
                 }
             });
 
-            // Listen for Alpine Apply event
             window.addEventListener('calendar-goto', function(e) {
-                calendar.gotoDate(e.detail.date);
+                if (window.fullCalendarInstance) {
+                    window.fullCalendarInstance.gotoDate(e.detail.date);
+                }
             });
+            window.calendarEventsRegistered = true;
         }
-    });
+    })();
 </script>
 <style>
     /* Tailwind UI Adjustments for FullCalendar */
@@ -168,5 +176,4 @@
         .fc .fc-button { padding: 0.25rem 0.5rem !important; font-size: 0.75rem !important; }
         .fc-daygrid-event { font-size: 0.65rem; padding: 0.1rem 0.2rem; }
     }
-</style>
-@endpush
+</style></div>

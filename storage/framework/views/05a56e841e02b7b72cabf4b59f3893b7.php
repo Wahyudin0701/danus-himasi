@@ -1,7 +1,7 @@
 <div class="w-full">
     
     <div class="mb-8">
-        <h1 class="text-2xl font-black text-gray-900">Kelola Periode <span class="text-blue-600">Kepengurusan</span></h1>
+        <h1 class="text-2xl font-black text-gray-900">Kelola Periode Kepengurusan Divisi <span class="text-blue-600">DANA DAN USAHA</span></h1>
         <p class="text-sm text-gray-500 font-medium mt-1">Buat dan aktifkan periode kepengurusan HIMASI Divisi Dana dan Usaha.</p>
     </div>
 
@@ -32,14 +32,18 @@
     <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
 
     
+    <div class="mb-6 flex justify-end">
+        <button wire:click="openCreate"
+                class="px-5 py-2.5 bg-blue-600 text-white text-sm font-bold rounded-xl hover:bg-blue-700 transition-all shadow-md shadow-blue-200 flex items-center gap-2">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+            Buat Periode Baru
+        </button>
+    </div>
+
+    
     <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-        <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+        <div class="px-6 py-4 border-b border-gray-100">
             <h3 class="text-base font-black text-gray-900">Semua Periode</h3>
-            <button wire:click="openCreate"
-                    class="px-4 py-2 bg-blue-600 text-white text-sm font-bold rounded-xl hover:bg-blue-700 transition-all shadow-sm shadow-blue-200 flex items-center gap-2">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-                Buat Periode Baru
-            </button>
         </div>
 
         <table class="w-full text-sm">
@@ -104,49 +108,28 @@
                 </button>
             </div>
             <div class="p-6 space-y-4">
-                <p class="text-sm text-gray-500">Masukkan tahun awal dan akhir untuk periode kepengurusan baru.</p>
-                <div class="grid grid-cols-2 gap-4">
+                <div class="bg-amber-50 border border-amber-200 rounded-xl p-4 flex gap-3 text-left">
+                    <svg class="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
                     <div>
-                        <label class="block text-xs font-bold text-gray-700 mb-1.5">Tahun Mulai</label>
-                        <input wire:model="year_start" type="number" min="2020" max="2050" placeholder="2025"
-                               class="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm font-medium focus:ring-2 focus:ring-blue-100 focus:border-blue-400 outline-none transition-all">
-                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php $__errorArgs = ['year_start'];
-$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
-if ($__bag->has($__errorArgs[0])) :
-if (isset($message)) { $__messageOriginal = $message; }
-$message = $__bag->first($__errorArgs[0]); ?> <p class="text-red-500 text-xs mt-1"><?php echo e($message); ?></p> <?php unset($message);
-if (isset($__messageOriginal)) { $message = $__messageOriginal; }
-endif;
-unset($__errorArgs, $__bag); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-gray-700 mb-1.5">Tahun Selesai</label>
-                        <input wire:model="year_end" type="number" min="2020" max="2050" placeholder="2026"
-                               class="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm font-medium focus:ring-2 focus:ring-blue-100 focus:border-blue-400 outline-none transition-all">
-                        <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php $__errorArgs = ['year_end'];
-$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
-if ($__bag->has($__errorArgs[0])) :
-if (isset($message)) { $__messageOriginal = $message; }
-$message = $__bag->first($__errorArgs[0]); ?> <p class="text-red-500 text-xs mt-1"><?php echo e($message); ?></p> <?php unset($message);
-if (isset($__messageOriginal)) { $message = $__messageOriginal; }
-endif;
-unset($__errorArgs, $__bag); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                        <span class="block text-sm font-bold text-amber-800 mb-1">Perhatian</span>
+                        <p class="text-xs text-amber-700 leading-relaxed">
+                            Saat periode baru dibuat, pengurus dan admin <strong>tidak dapat mengakses data periode saat ini</strong>. Jika Anda perlu mengakses datanya kembali, Anda harus mengaktifkan periode tersebut dari tabel daftar periode.
+                        </p>
                     </div>
                 </div>
-                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($year_start && $year_end && $year_start < $year_end): ?>
-                <div class="bg-blue-50 border border-blue-100 rounded-xl px-4 py-2.5 text-sm font-bold text-blue-700">
-                    Periode yang akan dibuat: <?php echo e($year_start); ?>/<?php echo e($year_end); ?>
-
+                
+                <div class="bg-blue-50 border border-blue-100 rounded-2xl px-4 py-4 text-center">
+                    <span class="block text-xs font-bold text-blue-600 uppercase tracking-wider mb-1">Periode yang akan dibuat</span>
+                    <span class="text-2xl font-black text-blue-800"><?php echo e($nextPeriodeName); ?></span>
                 </div>
-                <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
             </div>
-            <div class="flex border-t border-gray-100">
+            <div class="px-6 pb-6 flex gap-3">
                 <button wire:click="$set('showCreateModal', false)"
-                        class="flex-1 px-4 py-3.5 text-sm font-bold text-gray-600 hover:bg-gray-50 transition-colors">
+                        class="flex-1 px-4 py-3 bg-gray-100 text-gray-700 text-sm font-bold rounded-2xl hover:bg-gray-200 transition-colors">
                     Batal
                 </button>
                 <button wire:click="createPeriode"
-                        class="flex-1 px-4 py-3.5 text-sm font-bold text-white bg-blue-600 hover:bg-blue-700 transition-colors border-l border-gray-100">
+                        class="flex-1 px-4 py-3 bg-blue-600 text-white text-sm font-bold rounded-2xl hover:bg-blue-700 transition-colors shadow-md shadow-blue-200">
                     Buat Periode
                 </button>
             </div>
@@ -172,13 +155,13 @@ unset($__errorArgs, $__bag); ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendB
                     Pengguna periode sebelumnya tidak dapat login hingga periode mereka diaktifkan kembali.
                 </p>
             </div>
-            <div class="flex border-t border-gray-100">
+            <div class="px-6 pb-6 flex gap-3">
                 <button wire:click="$set('showActivateModal', false)"
-                        class="flex-1 px-4 py-3.5 text-sm font-bold text-gray-600 hover:bg-gray-50 transition-colors">
+                        class="flex-1 px-4 py-3 bg-gray-100 text-gray-700 text-sm font-bold rounded-2xl hover:bg-gray-200 transition-colors">
                     Batal
                 </button>
                 <button wire:click="activatePeriode"
-                        class="flex-1 px-4 py-3.5 text-sm font-bold text-blue-600 hover:bg-blue-50 transition-colors border-l border-gray-100">
+                        class="flex-1 px-4 py-3 bg-blue-600 text-white text-sm font-bold rounded-2xl hover:bg-blue-700 transition-colors shadow-md shadow-blue-200">
                     Ya, Aktifkan
                 </button>
             </div>

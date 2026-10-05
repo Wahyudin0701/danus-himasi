@@ -14,55 +14,50 @@ class Index extends Component
     public ?int $confirmActivateId = null;
     public string $confirmActivateName = '';
 
-    // Form fields
-    public string $year_start = '';
-    public string $year_end = '';
-
-    protected $rules = [
-        'year_start' => 'required|integer|min:2020|max:2050',
-        'year_end'   => 'required|integer|min:2020|max:2050|gt:year_start',
-    ];
-
-    protected $messages = [
-        'year_start.required' => 'Tahun mulai wajib diisi.',
-        'year_end.required'   => 'Tahun selesai wajib diisi.',
-        'year_end.gt'         => 'Tahun selesai harus lebih besar dari tahun mulai.',
-    ];
+    // Automated fields
+    public string $nextPeriodeName = '';
+    public int $nextYearStart = 0;
+    public int $nextYearEnd = 0;
 
     public function openCreate(): void
     {
-        $this->reset('year_start', 'year_end');
-        $this->resetValidation();
+        $latestPeriode = Periode::orderBy('year_end', 'desc')->first();
+        if ($latestPeriode) {
+            $this->nextYearStart = $latestPeriode->year_end;
+        } else {
+            $this->nextYearStart = (int) date('Y');
+        }
+        $this->nextYearEnd = $this->nextYearStart + 1;
+        $this->nextPeriodeName = $this->nextYearStart . '/' . $this->nextYearEnd;
+
         $this->showCreateModal = true;
     }
 
     public function createPeriode(): void
     {
-        $this->validate();
-
-        $name = $this->year_start . '/' . $this->year_end;
-
-        if (Periode::where('name', $name)->exists()) {
-            $this->addError('year_start', "Periode $name sudah ada.");
+        if (Periode::where('name', $this->nextPeriodeName)->exists()) {
+            session()->flash('error', "Periode {$this->nextPeriodeName} sudah ada.");
             return;
         }
 
-        Periode::create([
-            'name'       => $name,
-            'year_start' => (int) $this->year_start,
-            'year_end'   => (int) $this->year_end,
+        $newPeriode = Periode::create([
+            'name'       => $this->nextPeriodeName,
+            'year_start' => $this->nextYearStart,
+            'year_end'   => $this->nextYearEnd,
             'is_active'  => false,
         ]);
+        
+        $newPeriode->activate();
 
         ActivityLog::create([
             'user_id'     => Auth::id(),
             'action'      => 'CREATE_PERIODE',
-            'description' => Auth::user()->name . " membuat periode kepengurusan baru: $name.",
+            'description' => Auth::user()->name . " membuat dan otomatis mengaktifkan periode kepengurusan baru: {$this->nextPeriodeName}.",
             'ip_address'  => request()->ip(),
         ]);
 
         $this->showCreateModal = false;
-        session()->flash('success', "Periode $name berhasil dibuat.");
+        session()->flash('success', "Periode {$this->nextPeriodeName} berhasil dibuat.");
     }
 
     public function confirmActivate(int $id): void

@@ -46,6 +46,7 @@ class Create extends Component
             'start_date'  => $this->start_date ?: null,
             'end_date'    => $this->end_date ?: null,
             'created_by'  => auth()->id(),
+            'periode_id'  => optional(Periode::active())->id,
             'status'      => 'draft',
         ]);
 

@@ -1,15 +1,6 @@
-<div class="w-full h-[calc(100vh-8rem)] min-h-[600px] flex flex-col bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
+<div class="w-full h-[calc(100vh-8rem)] min-h-[600px] flex flex-col overflow-hidden">
     
-    
-    <div class="px-6 py-4 border-b border-gray-100 bg-white flex items-center gap-4 flex-shrink-0 z-10 shadow-sm">
-        <div class="w-12 h-12 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-lg border border-blue-200 overflow-hidden shrink-0">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
-        </div>
-        <div>
-            <h3 class="text-base font-black text-gray-900">Grup Chat Divisi</h3>
-            <p class="text-xs font-medium text-gray-500">Ruang diskusi internal pengurus dan anggota</p>
-        </div>
-    </div>
+
 
     <style>
         /* Hide scrollbar for Chrome, Safari and Opera */
@@ -19,9 +10,31 @@
     </style>
     
     
-    <div class="flex-1 overflow-y-auto p-6 bg-gray-50/50" id="chat-messages" wire:poll.<?php echo e($pollInterval); ?>ms style="scrollbar-width: none; -ms-overflow-style: none;">
+    <div class="flex-1 overflow-y-auto px-2 sm:px-4 py-6 bg-transparent" id="chat-messages" wire:poll.<?php echo e($pollInterval); ?>ms style="scrollbar-width: none; -ms-overflow-style: none;">
         <div class="space-y-6">
+            <?php $lastDate = null; ?>
             <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php $__empty_1 = true; $__currentLoopData = $messages; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $message): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+                <?php
+                    $currentDate = $message->created_at->format('Y-m-d');
+                    $isNewDate = $lastDate !== $currentDate;
+                    $lastDate = $currentDate;
+                ?>
+
+                <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($isNewDate): ?>
+                    <div class="flex justify-center my-6">
+                        <span class="px-4 py-1.5 bg-gray-200/70 text-gray-600 text-[10px] font-bold uppercase tracking-widest rounded-full border border-gray-200 shadow-sm backdrop-blur-sm">
+                            <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($currentDate === now()->format('Y-m-d')): ?>
+                                Hari Ini
+                            <?php elseif($currentDate === now()->subDay()->format('Y-m-d')): ?>
+                                Kemarin
+                            <?php else: ?>
+                                <?php echo e(\Carbon\Carbon::parse($currentDate)->locale('id')->translatedFormat('d F Y')); ?>
+
+                            <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+                        </span>
+                    </div>
+                <?php endif; ?><?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if ENDBLOCK]><![endif]--><?php endif; ?>
+
                 <?php
                     $isMe = $message->sender_id === auth()->id();
                     $isEditing = $editingMessageId === $message->id;
@@ -161,7 +174,7 @@
 
     
     <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if(!$editingMessageId): ?>
-    <div class="border-t border-gray-100 bg-white flex-shrink-0">
+    <div class="pt-4 pb-2 px-2 sm:px-4 flex-shrink-0">
 
         
         <?php if(\Livewire\Mechanisms\ExtendBlade\ExtendBlade::isRenderingLivewireComponent()): ?><!--[if BLOCK]><![endif]--><?php endif; ?><?php if($replyingToMessageId && $this->replyingToMessage): ?>
@@ -190,12 +203,13 @@
         <div class="p-4 relative" x-data="chatMention" x-on:click.outside="showMentions = false">
 
             
-            <div x-show="showMentions && filteredUsers.length > 0"
-                 x-cloak
-                 x-transition:enter="transition ease-out duration-100"
-                 x-transition:enter-start="opacity-0 -translate-y-2"
-                 x-transition:enter-end="opacity-100 translate-y-0"
-                 class="absolute bottom-full left-0 right-0 mb-2 mx-0 bg-white border border-gray-200 rounded-xl shadow-2xl z-50 overflow-hidden max-h-52 overflow-y-auto">
+            <div wire:ignore>
+                <div x-show="showMentions && filteredUsers.length > 0"
+                     x-cloak
+                     x-transition:enter="transition ease-out duration-100"
+                     x-transition:enter-start="opacity-0 -translate-y-2"
+                     x-transition:enter-end="opacity-100 translate-y-0"
+                     class="absolute bottom-full left-0 right-0 mb-2 mx-0 bg-white border border-gray-200 rounded-xl shadow-2xl z-50 overflow-hidden max-h-52 overflow-y-auto">
                 
                 <div class="px-3 py-2 border-b border-gray-100 bg-gray-50">
                     <span class="text-[10px] font-bold text-gray-500 uppercase tracking-wider">Tag Anggota</span>
@@ -206,12 +220,12 @@
                         @click="selectUser(user.name)"
                         @mousedown.prevent
                         :class="{'bg-blue-50': index === selectedIndex}"
-                        :class="{'bg-blue-50': index === selectedIndex}"
                         class="w-full text-left px-4 py-2.5 hover:bg-blue-50 flex items-center gap-3 transition-colors border-b border-gray-50 last:border-0">
                         <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-xs font-bold text-blue-600 border border-blue-200 flex-shrink-0" x-text="user.name.charAt(0)"></div>
                         <span class="text-sm font-bold text-gray-800" x-text="user.name"></span>
                     </button>
                 </template>
+                </div>
             </div>
 
             <form wire:submit="sendMessage" class="flex items-end gap-3">
@@ -220,9 +234,32 @@
                         x-ref="input"
                         wire:model="messageInput"
                         x-on:input="handleInput($event)"
-                        x-on:keydown="handleKeydown($event)"
+                        x-on:keydown.enter="
+                            if (!showMentions || filteredUsers.length === 0) {
+                                if (!$event.shiftKey) {
+                                    $event.preventDefault();
+                                    $wire.sendMessage();
+                                }
+                            } else {
+                                $event.preventDefault();
+                                selectUser(filteredUsers[selectedIndex].name);
+                            }
+                        "
+                        x-on:keydown.arrow-down="
+                            if (showMentions && filteredUsers.length > 0) {
+                                $event.preventDefault();
+                                selectedIndex = (selectedIndex + 1) % filteredUsers.length;
+                            }
+                        "
+                        x-on:keydown.arrow-up="
+                            if (showMentions && filteredUsers.length > 0) {
+                                $event.preventDefault();
+                                selectedIndex = (selectedIndex - 1 + filteredUsers.length) % filteredUsers.length;
+                            }
+                        "
+                        x-on:keydown.escape="showMentions = false"
                         rows="1"
-                        placeholder="Ketik pesan... gunakan @ untuk tag anggota"
+                        placeholder="Ketik Pesan..."
                         class="w-full bg-transparent border-0 px-4 py-3 text-sm font-medium focus:ring-0 resize-none max-h-32 rounded-2xl"
                         oninput="this.style.height = ''; this.style.height = Math.min(this.scrollHeight, 120) + 'px'"
                     ></textarea>
@@ -323,33 +360,6 @@
                         this.showMentions = false;
                         this.mentionQuery = '';
                         this.mentionStart = -1;
-                    }
-                },
-
-                handleKeydown(e) {
-                    if (!this.showMentions || this.filteredUsers.length === 0) {
-                        // Mention menu not open — Enter sends message
-                        if (e.key === 'Enter' && !e.shiftKey) {
-                            e.preventDefault();
-                            this.$wire.sendMessage();
-                        }
-                        return;
-                    }
-
-                    // Mention menu IS open — intercept keys
-                    if (e.key === 'ArrowDown') {
-                        e.preventDefault();
-                        this.selectedIndex = (this.selectedIndex + 1) % this.filteredUsers.length;
-                    } else if (e.key === 'ArrowUp') {
-                        e.preventDefault();
-                        this.selectedIndex = (this.selectedIndex - 1 + this.filteredUsers.length) % this.filteredUsers.length;
-                    } else if (e.key === 'Enter') {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        this.selectUser(this.filteredUsers[this.selectedIndex].name);
-                    } else if (e.key === 'Escape') {
-                        e.preventDefault();
-                        this.showMentions = false;
                     }
                 },
 

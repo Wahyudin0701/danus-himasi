@@ -11,22 +11,45 @@ class Index extends Component
 {
     public string $filter = 'all';
 
-        public function deleteProject($id)
+    public bool $showDeleteModal = false;
+    public ?int $projectToDeleteId = null;
+    public string $projectToDeleteName = '';
+
+    public function confirmDelete(int $id)
+    {
+        $project = Project::findOrFail($id);
+        $this->projectToDeleteId = $id;
+        $this->projectToDeleteName = $project->name;
+        $this->showDeleteModal = true;
+    }
+
+    public function cancelDelete()
+    {
+        $this->showDeleteModal = false;
+        $this->projectToDeleteId = null;
+        $this->projectToDeleteName = '';
+    }
+
+    public function deleteProject()
     {
         if (!in_array(auth()->user()->role, ['admin', 'kadiv', 'wakadiv'])) {
             abort(403);
         }
         
-        $project = Project::findOrFail($id);
-        $projectName = $project->name;
-        $project->delete();
-        
-        \App\Models\ActivityLog::create([
-            'user_id' => auth()->id(),
-            'action' => 'DELETE_PROJECT',
-            'description' => auth()->user()->name . ' membatalkan dan menghapus program kerja: ' . $projectName,
-            'ip_address' => request()->ip()
-        ]);
+        if ($this->projectToDeleteId) {
+            $project = Project::findOrFail($this->projectToDeleteId);
+            $projectName = $project->name;
+            $project->delete();
+            
+            \App\Models\ActivityLog::create([
+                'user_id' => auth()->id(),
+                'action' => 'DELETE_PROJECT',
+                'description' => auth()->user()->name . ' membatalkan dan menghapus program kerja: ' . $projectName,
+                'ip_address' => request()->ip()
+            ]);
+
+            $this->cancelDelete();
+        }
     }
     
     public function render()

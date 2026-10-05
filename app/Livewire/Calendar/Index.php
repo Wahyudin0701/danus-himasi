@@ -3,6 +3,7 @@
 namespace App\Livewire\Calendar;
 
 use App\Models\Project;
+use App\Models\Periode;
 use Livewire\Component;
 use Livewire\Attributes\Layout;
 
@@ -11,8 +12,12 @@ class Index extends Component
 {
     public function render()
     {
-        // Fetch all projects for the calendar
-        $projects = Project::whereNotNull('start_date')->get();
+        $activePeriodeId = optional(Periode::active())->id;
+
+        // Fetch projects only for the active period
+        $projects = Project::whereNotNull('start_date')
+            ->where('periode_id', $activePeriodeId)
+            ->get();
         
         $events = $projects->map(function ($project) {
             return [

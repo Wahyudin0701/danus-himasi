@@ -2,10 +2,10 @@
 use Illuminate\Support\Facades\Auth;
 ?>
 
-<aside class="w-64 bg-white border-r border-gray-100 flex-col h-screen flex-shrink-0 hidden lg:flex" :class="sidebarOpen ? '!flex fixed inset-y-0 left-0 z-50' : ''">
+<aside class="w-64 bg-white border-r border-gray-100 flex flex-col h-screen flex-shrink-0 fixed inset-y-0 left-0 z-50 lg:static lg:z-auto transition-transform duration-300 ease-in-out" :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'">
     {{-- Logo / Header --}}
     <div class="h-20 flex items-center gap-3 px-6 border-b border-gray-100">
-        <img src="{{ asset('Logo_Himasi_Store.jpg') }}" alt="Logo Himasi" class="w-11 h-11 rounded-full object-cover flex-shrink-0 shadow-md border border-gray-100">
+        <img src="{{ asset('Logo_Himasi_Store.png').'?v=2' }}" alt="Logo Himasi" class="w-11 h-11 rounded-full object-cover flex-shrink-0 shadow-md border border-gray-100">
         <div class="leading-tight">
             <h2 class="text-sm font-black text-gray-900 tracking-tight">DANUS HIMASI</h2>
             <p class="text-[10px] font-bold text-orange-600 tracking-wider">UNIVERSITAS JAMBI</p>
@@ -34,6 +34,11 @@ use Illuminate\Support\Facades\Auth;
             <a href="{{ route('periode.index') }}" wire:navigate class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all mt-1 {{ request()->routeIs('periode.*') ? 'bg-blue-600 text-white shadow-md shadow-blue-200' : 'text-gray-500 hover:bg-gray-50 hover:text-blue-600' }}">
                 <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                 Kelola Periode
+            </a>
+
+            <a href="{{ route('settings.characters') }}" wire:navigate class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all mt-1 {{ request()->routeIs('settings.characters') ? 'bg-blue-600 text-white shadow-md shadow-blue-200' : 'text-gray-500 hover:bg-gray-50 hover:text-blue-600' }}">
+                <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                Karakter Tampilan
             </a>
 
             <a href="{{ route('system.logs') }}" wire:navigate class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all mt-1 {{ request()->routeIs('system.logs') ? 'bg-blue-600 text-white shadow-md shadow-blue-200' : 'text-gray-500 hover:bg-gray-50 hover:text-blue-600' }}">
@@ -77,9 +82,23 @@ use Illuminate\Support\Facades\Auth;
                 Kalender Divisi
             </a>
 
-            <a href="{{ route('chat.index') }}" wire:navigate class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all mt-1 {{ request()->routeIs('chat.*') ? 'bg-blue-600 text-white shadow-md shadow-blue-200' : 'text-gray-500 hover:bg-gray-50 hover:text-blue-600' }}">
-                <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"/></svg>
-                Chat Internal
+            @php
+                $unreadChatCount = \App\Models\Message::where('periode_id', optional(\App\Models\Periode::active())->id)
+                    ->where('sender_id', '!=', auth()->id())
+                    ->when(auth()->user()->last_read_message_id, function ($q, $lastReadId) {
+                        $q->where('id', '>', $lastReadId);
+                    })->count();
+            @endphp
+            <a href="{{ route('chat.index') }}" wire:navigate class="flex items-center justify-between px-4 py-3 rounded-xl text-sm font-bold transition-all mt-1 {{ request()->routeIs('chat.*') ? 'bg-blue-600 text-white shadow-md shadow-blue-200' : 'text-gray-500 hover:bg-gray-50 hover:text-blue-600' }}">
+                <div class="flex items-center gap-3">
+                    <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"/></svg>
+                    Chat Internal
+                </div>
+                @if($unreadChatCount > 0)
+                    <span class="inline-flex items-center justify-center w-5 h-5 text-[10px] font-bold text-white bg-red-500 rounded-full shrink-0 shadow-sm">
+                        {{ $unreadChatCount > 99 ? '99+' : $unreadChatCount }}
+                    </span>
+                @endif
             </a>
         </div>
 

@@ -22,6 +22,7 @@ class User extends Authenticatable
         'jabatan',
         'photo',
         'periode_id',
+        'last_read_message_id',
     ];
 
     protected $hidden = [

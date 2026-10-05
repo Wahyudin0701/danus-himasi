@@ -1,15 +1,6 @@
-<div class="w-full h-[calc(100vh-8rem)] min-h-[600px] flex flex-col bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
+<div class="w-full h-[calc(100vh-8rem)] min-h-[600px] flex flex-col overflow-hidden">
     
-    {{-- Chat Header --}}
-    <div class="px-6 py-4 border-b border-gray-100 bg-white flex items-center gap-4 flex-shrink-0 z-10 shadow-sm">
-        <div class="w-12 h-12 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-lg border border-blue-200 overflow-hidden shrink-0">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
-        </div>
-        <div>
-            <h3 class="text-base font-black text-gray-900">Grup Chat Divisi</h3>
-            <p class="text-xs font-medium text-gray-500">Ruang diskusi internal pengurus dan anggota</p>
-        </div>
-    </div>
+
 
     <style>
         /* Hide scrollbar for Chrome, Safari and Opera */
@@ -19,7 +10,7 @@
     </style>
     
     {{-- Messages Area --}}
-    <div class="flex-1 overflow-y-auto p-6 bg-gray-50/50" id="chat-messages" wire:poll.{{ $pollInterval }}ms style="scrollbar-width: none; -ms-overflow-style: none;">
+    <div class="flex-1 overflow-y-auto px-2 sm:px-4 py-6 bg-transparent" id="chat-messages" wire:poll.{{ $pollInterval }}ms style="scrollbar-width: none; -ms-overflow-style: none;">
         <div class="space-y-6">
             @php $lastDate = null; @endphp
             @forelse($messages as $message)
@@ -177,7 +168,7 @@
 
     {{-- Input Area --}}
     @if(!$editingMessageId)
-    <div class="border-t border-gray-100 bg-white flex-shrink-0">
+    <div class="pt-4 pb-2 px-2 sm:px-4 flex-shrink-0">
 
         {{-- Reply Preview --}}
         @if($replyingToMessageId && $this->replyingToMessage)
@@ -235,9 +226,32 @@
                         x-ref="input"
                         wire:model="messageInput"
                         x-on:input="handleInput($event)"
-                        x-on:keydown="handleKeydown($event)"
+                        x-on:keydown.enter="
+                            if (!showMentions || filteredUsers.length === 0) {
+                                if (!$event.shiftKey) {
+                                    $event.preventDefault();
+                                    $wire.sendMessage();
+                                }
+                            } else {
+                                $event.preventDefault();
+                                selectUser(filteredUsers[selectedIndex].name);
+                            }
+                        "
+                        x-on:keydown.arrow-down="
+                            if (showMentions && filteredUsers.length > 0) {
+                                $event.preventDefault();
+                                selectedIndex = (selectedIndex + 1) % filteredUsers.length;
+                            }
+                        "
+                        x-on:keydown.arrow-up="
+                            if (showMentions && filteredUsers.length > 0) {
+                                $event.preventDefault();
+                                selectedIndex = (selectedIndex - 1 + filteredUsers.length) % filteredUsers.length;
+                            }
+                        "
+                        x-on:keydown.escape="showMentions = false"
                         rows="1"
-                        placeholder="Ketik pesan... gunakan @ untuk tag anggota"
+                        placeholder="Ketik Pesan..."
                         class="w-full bg-transparent border-0 px-4 py-3 text-sm font-medium focus:ring-0 resize-none max-h-32 rounded-2xl"
                         oninput="this.style.height = ''; this.style.height = Math.min(this.scrollHeight, 120) + 'px'"
                     ></textarea>
@@ -338,33 +352,6 @@
                         this.showMentions = false;
                         this.mentionQuery = '';
                         this.mentionStart = -1;
-                    }
-                },
-
-                handleKeydown(e) {
-                    if (!this.showMentions || this.filteredUsers.length === 0) {
-                        // Mention menu not open — Enter sends message
-                        if (e.key === 'Enter' && !e.shiftKey) {
-                            e.preventDefault();
-                            this.$wire.sendMessage();
-                        }
-                        return;
-                    }
-
-                    // Mention menu IS open — intercept keys
-                    if (e.key === 'ArrowDown') {
-                        e.preventDefault();
-                        this.selectedIndex = (this.selectedIndex + 1) % this.filteredUsers.length;
-                    } else if (e.key === 'ArrowUp') {
-                        e.preventDefault();
-                        this.selectedIndex = (this.selectedIndex - 1 + this.filteredUsers.length) % this.filteredUsers.length;
-                    } else if (e.key === 'Enter') {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        this.selectUser(this.filteredUsers[this.selectedIndex].name);
-                    } else if (e.key === 'Escape') {
-                        e.preventDefault();
-                        this.showMentions = false;
                     }
                 },
 

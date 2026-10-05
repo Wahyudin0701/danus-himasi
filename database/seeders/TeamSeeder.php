@@ -86,7 +86,7 @@ class TeamSeeder extends Seeder
                 ['nim' => $member['nim']],
                 [
                     'name' => $member['name'],
-                    'email' => $member['email'],
+                    'email' => $member['email'] ?? strtolower($member['nim']) . '@himasi.com',
                     'password' => Hash::make('password'),
                     'role' => $member['role'],
                     'angkatan' => $member['angkatan'],

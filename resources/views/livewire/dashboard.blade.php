@@ -24,7 +24,39 @@
 
         {{-- Stats Cards --}}
         <div x-data="{ showFinanceModal: false }" class="mb-8">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {{-- Mobile Layout (Pastel Boxes) --}}
+            <div class="flex md:hidden items-start justify-between gap-3 mt-4 mb-2">
+                {{-- Card Anggota --}}
+                <div class="flex flex-col items-center gap-2 flex-1">
+                    <div class="w-full max-w-[76px] h-[76px] rounded-[1.25rem] bg-blue-50 text-blue-600 border border-blue-100 flex flex-col items-center justify-center shadow-sm">
+                        <span class="text-3xl font-black">{{ $totalAnggota }}</span>
+                    </div>
+                    <p class="text-[10px] font-bold text-gray-700 text-center leading-tight">Total<br>Anggota</p>
+                </div>
+
+                {{-- Card Proker --}}
+                <div class="flex flex-col items-center gap-2 flex-1">
+                    <div class="w-full max-w-[76px] h-[76px] rounded-[1.25rem] bg-purple-50 text-purple-600 border border-purple-100 flex flex-col items-center justify-center shadow-sm">
+                        <span class="text-3xl font-black">{{ $totalProker }}</span>
+                    </div>
+                    <p class="text-[10px] font-bold text-gray-700 text-center leading-tight">Total<br>Proker</p>
+                </div>
+
+                {{-- Card Keuntungan --}}
+                <div @click="showFinanceModal = true" class="flex flex-col items-center gap-2 flex-[1.8] cursor-pointer active:scale-95 transition-transform">
+                    <div class="w-full max-w-[140px] h-[76px] rounded-[1.25rem] {{ $totalKeuntungan >= 0 ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' : 'bg-red-50 text-red-600 border border-red-100' }} flex items-center justify-center shadow-sm px-2 text-center gap-0.5">
+                        <span class="text-[10px] font-bold opacity-80 mt-[3px]">{{ $totalKeuntungan < 0 ? '-' : '' }}Rp</span>
+                        <span class="text-[15px] sm:text-base font-black truncate">{{ number_format(abs($totalKeuntungan), 0, ',', '.') }}</span>
+                    </div>
+                    <p class="text-[10px] font-bold text-gray-700 text-center leading-tight flex items-center justify-center gap-0.5">
+                        Keuntungan
+                        <svg class="w-2.5 h-2.5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    </p>
+                </div>
+            </div>
+
+            {{-- Desktop Layout (White Cards) --}}
+            <div class="hidden md:grid grid-cols-3 gap-6">
                 {{-- Card Anggota --}}
                 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
                     <div class="flex justify-between items-start">
@@ -87,15 +119,15 @@
                      x-transition:leave-start="opacity-100 translate-y-0 scale-100"
                      x-transition:leave-end="opacity-0 translate-y-8 scale-95">
                     {{-- Header --}}
-                    <div class="bg-gradient-to-br from-emerald-500 to-teal-600 p-6 pb-8">
+                    <div class="bg-blue-700 p-6 pb-8">
                         <div class="flex justify-between items-start mb-4">
-                            <p class="text-xs font-bold text-emerald-100 uppercase tracking-widest">Rincian Keuangan Divisi</p>
+                            <p class="text-xs font-bold text-blue-100 uppercase tracking-widest">Rincian Keuangan Divisi</p>
                             <button @click="showFinanceModal = false" class="w-7 h-7 rounded-full bg-white/20 text-white hover:bg-white/30 flex items-center justify-center transition-colors">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                             </button>
                         </div>
                         <p class="text-4xl font-black text-white">{{ $totalKeuntungan < 0 ? '-' : '' }}Rp{{ number_format(abs($totalKeuntungan), 0, ',', '.') }}</p>
-                        <p class="text-sm font-bold text-emerald-100 mt-1">Total Keuntungan Divisi</p>
+                        <p class="text-sm font-bold text-blue-100 mt-1">Total Keuntungan Divisi</p>
                     </div>
                     {{-- Breakdown --}}
                     <div class="p-6 space-y-4">
@@ -214,7 +246,39 @@
 
         {{-- Stats Cards --}}
         <div x-data="{ showFinanceModal: false }" class="mb-8">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {{-- Mobile Layout (Pastel Boxes) --}}
+            <div class="flex md:hidden items-start justify-between gap-3 mt-4 mb-2">
+                {{-- Card Anggota --}}
+                <div class="flex flex-col items-center gap-2 flex-1">
+                    <div class="w-full max-w-[76px] h-[76px] rounded-[1.25rem] bg-blue-50 text-blue-600 border border-blue-100 flex flex-col items-center justify-center shadow-sm">
+                        <span class="text-3xl font-black">{{ $totalAnggota }}</span>
+                    </div>
+                    <p class="text-[10px] font-bold text-gray-700 text-center leading-tight">Total<br>Anggota</p>
+                </div>
+
+                {{-- Card Proker --}}
+                <div class="flex flex-col items-center gap-2 flex-1">
+                    <div class="w-full max-w-[76px] h-[76px] rounded-[1.25rem] bg-purple-50 text-purple-600 border border-purple-100 flex flex-col items-center justify-center shadow-sm">
+                        <span class="text-3xl font-black">{{ $totalProker }}</span>
+                    </div>
+                    <p class="text-[10px] font-bold text-gray-700 text-center leading-tight">Total<br>Proker</p>
+                </div>
+
+                {{-- Card Keuntungan --}}
+                <div @click="showFinanceModal = true" class="flex flex-col items-center gap-2 flex-[1.8] cursor-pointer active:scale-95 transition-transform">
+                    <div class="w-full max-w-[140px] h-[76px] rounded-[1.25rem] {{ $totalKeuntungan >= 0 ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' : 'bg-red-50 text-red-600 border border-red-100' }} flex items-center justify-center shadow-sm px-2 text-center gap-0.5">
+                        <span class="text-[10px] font-bold opacity-80 mt-[3px]">{{ $totalKeuntungan < 0 ? '-' : '' }}Rp</span>
+                        <span class="text-[15px] sm:text-base font-black truncate">{{ number_format(abs($totalKeuntungan), 0, ',', '.') }}</span>
+                    </div>
+                    <p class="text-[10px] font-bold text-gray-700 text-center leading-tight flex items-center justify-center gap-0.5">
+                        Keuntungan
+                        <svg class="w-2.5 h-2.5 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    </p>
+                </div>
+            </div>
+
+            {{-- Desktop Layout (White Cards) --}}
+            <div class="hidden md:grid grid-cols-3 gap-6">
                 {{-- Card Anggota --}}
                 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
                     <div class="flex justify-between items-start">
@@ -277,15 +341,15 @@
                      x-transition:leave-start="opacity-100 translate-y-0 scale-100"
                      x-transition:leave-end="opacity-0 translate-y-8 scale-95">
                     {{-- Header --}}
-                    <div class="bg-gradient-to-br from-emerald-500 to-teal-600 p-6 pb-8">
+                    <div class="bg-blue-700 p-6 pb-8">
                         <div class="flex justify-between items-start mb-4">
-                            <p class="text-xs font-bold text-emerald-100 uppercase tracking-widest">Rincian Keuangan Divisi</p>
+                            <p class="text-xs font-bold text-blue-100 uppercase tracking-widest">Rincian Keuangan Divisi</p>
                             <button @click="showFinanceModal = false" class="w-7 h-7 rounded-full bg-white/20 text-white hover:bg-white/30 flex items-center justify-center transition-colors">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                             </button>
                         </div>
                         <p class="text-4xl font-black text-white">{{ $totalKeuntungan < 0 ? '-' : '' }}Rp{{ number_format(abs($totalKeuntungan), 0, ',', '.') }}</p>
-                        <p class="text-sm font-bold text-emerald-100 mt-1">Total Keuntungan Divisi</p>
+                        <p class="text-sm font-bold text-blue-100 mt-1">Total Keuntungan Divisi</p>
                     </div>
                     {{-- Breakdown --}}
                     <div class="p-6 space-y-4">
@@ -396,3 +460,4 @@
         </div>
     @endif
 </div>
+

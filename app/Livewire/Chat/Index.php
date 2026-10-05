@@ -116,6 +116,11 @@ class Index extends Component
             ->orderBy('created_at', 'asc')
             ->get();
 
+        $latestMessage = $messages->last();
+        if ($latestMessage && Auth::user()->last_read_message_id !== $latestMessage->id) {
+            Auth::user()->update(['last_read_message_id' => $latestMessage->id]);
+        }
+
         $users = \App\Models\User::where('periode_id', $activePeriodeId)->get(['id', 'name']);
 
         return view('livewire.chat.index', [
